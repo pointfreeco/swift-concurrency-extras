@@ -230,7 +230,7 @@ These problems, and more, can be fixed by running this entire test on the main s
 
 ```diff
  func testIsLoading() async {
-+  withMainSerialExecutor {
++  await withMainSerialExecutor {
      let model = NumberFactModel(getFact: { "\($0) is a good number" })
 
      let task = Task { await model.getFactButtonTapped() }
