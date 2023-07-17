@@ -16,9 +16,6 @@ let package = Package(
       targets: ["ConcurrencyExtras"]
     )
   ],
-  dependencies: [
-    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
-  ],
   targets: [
     .target(
       name: "ConcurrencyExtras"
@@ -31,6 +28,13 @@ let package = Package(
     ),
   ]
 )
+
+#if !os(Windows)
+// Add the documentation compiler plugin if possible
+  package.dependencies.append(
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+  )
+#endif
 
 //for target in package.targets {
 //  target.swiftSettings = target.swiftSettings ?? []
