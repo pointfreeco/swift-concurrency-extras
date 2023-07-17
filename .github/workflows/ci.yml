@@ -15,11 +15,12 @@ concurrency:
 
 jobs:
   library:
-    runs-on: macos-13
+    name: macOS
     strategy:
       matrix:
         xcode: ['14.3.1']
         config: ['debug', 'release']
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v3
       - name: Select Xcode ${{ matrix.xcode }}
@@ -27,17 +28,47 @@ jobs:
       - name: Run ${{ matrix.config }} tests
         run: CONFIG=${{ matrix.config }} make test
 
-  ubuntu-tests:
+  linux:
+    name: Linux
     strategy:
       matrix:
         os: [ubuntu-20.04]
         config: ['debug', 'release']
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v3
       - name: Build
         run: swift build
       - name: Run tests
         run: swift test -c ${{ matrix.config }}
+
+  wasm:
+    name: Wasm
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - { toolchain: wasm-5.7.1-RELEASE }
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "${{ matrix.toolchain }}" > .swift-version
+      - uses: swiftwasm/swiftwasm-action@v5.7
+        with:
+          shell-action: carton test --environment node
+
+  windows:
+    name: Windows
+    strategy:
+      matrix:
+        os: [windows-latest]
+        config: ['debug', 'release']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: compnerd/gha-setup-swift@main
+        with:
+          branch: swift-5.8-release
+          tag: 5.8-RELEASE
+
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: swift build -c ${{ matrix.config }}
