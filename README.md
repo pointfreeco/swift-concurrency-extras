@@ -156,8 +156,9 @@ purpose, it has not landed in Swift.
 
 Some asynchronous code is [notoriously difficult][reliably-testing-swift-concurrency] to test in
 Swift due to how suspension points are processed by the runtime. The library comes with a static
-function, `withMainSerialExecutor`, that runs all tasks spawned in an operation serially and
-deterministically. This function can be used to make asynchronous tests faster and less flakey.
+function, `withMainSerialExecutor`, that attempts[^1] to run all tasks spawned in an operation
+serially and deterministically. This function can be used to make asynchronous tests faster and less
+flakey.
 
 For example, consider the following seemingly simple model that makes a network request and manages
 so `isLoading` state while the request is inflight:
@@ -246,6 +247,10 @@ These problems, and more, can be fixed by running this entire test on the main s
 ```
 
 That one change makes this test pass deterministically, 100% of the time.
+
+[^1]: We say "attempts" because under the hood it relies on a global, mutable variable in the Swift
+runtime to do its job, and there are no scoping _guarantees_ should this mutable variable change
+during the operation.
 
 
 ## Documentation
