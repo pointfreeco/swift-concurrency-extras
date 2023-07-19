@@ -5,15 +5,23 @@
   ///
   /// Some asynchronous code is [notoriously
   /// difficult](https://forums.swift.org/t/reliably-testing-code-that-adopts-swift-concurrency/57304)
-  /// to test in Swift due to how suspension points are processed by the runtime. This function runs
-  /// all tasks spawned in the given operation serially and deterministically. It makes asynchronous
-  /// tests faster and less flakey.
+  /// to test in Swift due to how suspension points are processed by the runtime. This function
+  /// attempts to run all tasks spawned in the given operation serially and deterministically. It
+  /// makes asynchronous tests faster and less flakey.
   ///
   /// ```swift
   /// await withMainSerialExecutor {
   ///   // Everything performed in this scope is performed serially...
   /// }
   /// ```
+  ///
+  /// > Warning: This API is only intended to be used from tests to make them more reliable. Please do
+  /// > not use it from application code.
+  /// >
+  /// > We say that it "_attempts_ to run all tasks spawned in an operation serially and
+  /// > deterministically" because under the hood it relies on a global, mutable variable in the Swift
+  /// > runtime to do its job, and there are no scoping _guarantees_ should this mutable variable change
+  /// > during the operation.
   ///
   /// - Parameter operation: An operation to be performed on the main serial executor.
   @MainActor
