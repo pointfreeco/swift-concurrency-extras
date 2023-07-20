@@ -168,7 +168,7 @@ and deterministically. This function can be used to make asynchronous tests fast
 > during the operation.
 
 For example, consider the following seemingly simple model that makes a network request and manages
-so `isLoading` state while the request is inflight:
+some `isLoading` state while the request is inflight:
 
 ```swift
 @Observable
