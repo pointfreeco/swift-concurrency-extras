@@ -198,7 +198,9 @@ flips to `true` and then `false`. You might hope that it is as easy as this:
 
 ```swift
 func testIsLoading() async {
-  let model = NumberFactModel(getFact: { "\($0) is a good number" })
+  let model = NumberFactModel(getFact: { 
+    "\($0) is a good number." 
+  })
 
   let task = Task { await model.getFactButtonTapped() }
   XCTAssertEqual(model.isLoading, true)
@@ -219,7 +221,9 @@ called and the moment the request finishes by using a `Task.yield`:
 
 ```diff
  func testIsLoading() async {
-   let model = NumberFactModel(getFact: { "\($0) is a good number" })
+   let model = NumberFactModel(getFact: { 
+     "\($0) is a good number." 
+   })
 
    let task = Task { await model.getFactButtonTapped() }
 +  await Task.yield()
@@ -234,12 +238,17 @@ called and the moment the request finishes by using a `Task.yield`:
 
 But that still fails the vast majority of times.
 
-These problems, and more, can be fixed by running this entire test on the main serial executor:
+These problems, and more, can be fixed by running this entire test on the main serial executor.
+You will also have insert a small yield in the `getFact` endpoint due to Swift's ability to
+inline async closures that do not actually perform async work:
 
 ```diff
  func testIsLoading() async {
 +  await withMainSerialExecutor {
-     let model = NumberFactModel(getFact: { "\($0) is a good number" })
+     let model = NumberFactModel(getFact: {
++      await Task.yield()
+       return "\($0) is a good number." 
+     })
 
      let task = Task { await model.getFactButtonTapped() }
      await Task.yield()
@@ -253,7 +262,7 @@ These problems, and more, can be fixed by running this entire test on the main s
  }
 ```
 
-That one change makes this test pass deterministically, 100% of the time.
+That small change makes this test pass deterministically, 100% of the time.
 
 
 ## Documentation
