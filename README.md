@@ -264,7 +264,6 @@ inline async closures that do not actually perform async work:
 
 That small change makes this test pass deterministically, 100% of the time.
 
-
 ## Documentation
 
 The latest documentation for this library is available [here][concurrency-extras-docs].

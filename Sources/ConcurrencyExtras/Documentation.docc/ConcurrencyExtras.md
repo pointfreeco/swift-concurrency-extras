@@ -243,6 +243,7 @@ need to make weaker assertions due to non-determinism, but can still assert on s
 
 ### Serial execution
 
+- <doc:ReliablyTestingAsync>
 - ``withMainSerialExecutor(operation:)-79jpc``
 
 ### Preconcurrency
