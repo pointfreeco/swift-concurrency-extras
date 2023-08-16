@@ -15,6 +15,9 @@
   /// }
   /// ```
   ///
+  /// See <doc:ReliablyTestingAsync> for more information on why this tool is needed to test
+  /// async code and how to use it.
+  /// 
   /// > Warning: This API is only intended to be used from tests to make them more reliable. Please do
   /// > not use it from application code.
   /// >
