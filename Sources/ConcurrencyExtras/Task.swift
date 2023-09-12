@@ -82,3 +82,115 @@ extension Task where Failure == Error {
     }
   }
 }
+
+extension Task where Failure == any Error  {
+  @available(iOS 16.0, *)
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func delay(
+    for duration: Duration,
+    priority: TaskPriority? = nil,
+    @_inheritActorContext @_implicitSelfCapture operation: @Sendable @escaping () async throws -> Success
+  ) -> Self {
+    Task(priority: priority) {
+      try await Task<Never, Never>.sleep(for: duration)
+      return try await operation()
+    }
+  }
+
+  @available(iOS 16.0, *)
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func detachedDelay(
+    for duration: Duration,
+    priority: TaskPriority? = nil,
+    operation: @Sendable @escaping () async throws -> Success
+  ) -> Self {
+    Task.detached(priority: priority) {
+      try await Task<Never, Never>.sleep(for: duration)
+      return try await operation()
+    }
+  }
+
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func delay(
+    nanoseconds duration: UInt64,
+    priority: TaskPriority? = nil,
+    @_inheritActorContext @_implicitSelfCapture operation: @Sendable @escaping () async throws -> Success
+  ) -> Self {
+    Task(priority: priority) {
+      try await Task<Never, Never>.sleep(nanoseconds: duration)
+      return try await operation()
+    }
+  }
+
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func detachedDelay(
+    nanoseconds duration: UInt64,
+    priority: TaskPriority? = nil,
+    operation: @Sendable @escaping () async throws -> Success
+  ) -> Self {
+    Task.detached(priority: priority) {
+      try await Task<Never, Never>.sleep(nanoseconds: duration)
+      return try await operation()
+    }
+  }
+}
+
+extension Task where Failure == Never {
+  @available(iOS 16.0, *)
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func delay(
+    for duration: Duration,
+    priority: TaskPriority? = nil,
+    @_inheritActorContext @_implicitSelfCapture operation: @Sendable @escaping () async -> Success
+  ) -> Self {
+    Task(priority: priority) {
+      try? await Task<Never, Never>.sleep(for: duration)
+      return await operation()
+    }
+  }
+
+  @available(iOS 16.0, *)
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func detachedDelay(
+    for duration: Duration,
+    priority: TaskPriority? = nil,
+    operation: @Sendable @escaping () async -> Success
+  ) -> Self {
+    Task.detached(priority: priority) {
+      try? await Task<Never, Never>.sleep(for: duration)
+      return await operation()
+    }
+  }
+
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func delay(
+    nanoseconds duration: UInt64,
+    priority: TaskPriority? = nil,
+    @_inheritActorContext @_implicitSelfCapture operation: @Sendable @escaping () async -> Success
+  ) -> Self {
+    Task(priority: priority) {
+      try? await Task<Never, Never>.sleep(nanoseconds: duration)
+      return await operation()
+    }
+  }
+
+  @discardableResult
+  @_alwaysEmitIntoClient
+  static func detachedDelay(
+    nanoseconds duration: UInt64,
+    priority: TaskPriority? = nil,
+    operation: @Sendable @escaping () async -> Success
+  ) -> Self {
+    Task.detached(priority: priority) {
+      try? await Task<Never, Never>.sleep(nanoseconds: duration)
+      return await operation()
+    }
+  }
+}
