@@ -36,7 +36,7 @@ public final class LockIsolated<Value>: @unchecked Sendable {
   /// }
   /// ```
   ///
-  /// - Parameters: operation: An operation to be performed on the the underlying value with a lock.
+  /// - Parameter operation: An operation to be performed on the the underlying value with a lock.
   /// - Returns: The result of the operation.
   public func withValue<T: Sendable>(
     _ operation: (inout Value) throws -> T

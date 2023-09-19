@@ -79,7 +79,7 @@ public final actor ActorIsolated<Value> {
   /// > await didOpenSettings.withValue { XCTAssertTrue($0) }
   /// > ```
   ///
-  /// - Parameters: operation: An operation to be performed on the actor with the underlying value.
+  /// - Parameter operation: An operation to be performed on the actor with the underlying value.
   /// - Returns: The result of the operation.
   public func withValue<T>(
     _ operation: @Sendable (inout Value) throws -> T
