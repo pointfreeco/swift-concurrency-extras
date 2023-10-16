@@ -82,7 +82,7 @@ The library comes with numerous helper APIs spread across the two Swift stream t
 
     Use `eraseToThrowingStream()` to propagate failures from throwing async sequences.
 
-  * Swift 5.9's `makeStream(of:)` functions have been back-ported. It can handy in tests that need
+  * Swift 5.9's `makeStream(of:)` functions have been back-ported. It can be handy in tests that need
     to override a dependency endpoint that returns a stream:
 
     ```swift
