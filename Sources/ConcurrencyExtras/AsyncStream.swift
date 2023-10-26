@@ -1,3 +1,5 @@
+import Foundation
+
 extension AsyncStream {
   /// Produces an `AsyncStream` from an `AsyncSequence` by consuming the sequence till it
   /// terminates, ignoring any failure.
@@ -51,10 +53,13 @@ extension AsyncStream {
   ///
   /// - Parameter sequence: An async sequence.
   public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element {
+    let lock = NSLock()
     var iterator: S.AsyncIterator?
     self.init {
-      if iterator == nil {
-        iterator = sequence.makeAsyncIterator()
+      lock.withLock {
+        if iterator == nil {
+          iterator = sequence.makeAsyncIterator()
+        }
       }
       return try? await iterator?.next()
     }
