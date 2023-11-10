@@ -4,11 +4,18 @@ extension Result where Failure == Swift.Error {
   ///
   /// - Parameter body: A throwing closure to evaluate.
   @_transparent
-  public init(catching body: () async throws -> Success) async {
+  @_unsafeInheritExecutor
+  public static func catching(_ body: () async throws -> Success) async -> Self {
     do {
-      self = .success(try await body())
+      return .success(try await body())
     } catch {
-      self = .failure(error)
+      return .failure(error)
     }
+  }
+
+  // NB: `@_unsafeInheritExecutor` is not compatible with initializers.
+  @available(*, unavailable, renamed: "Result.catching")
+  public init(catching body: () async throws -> Success) async {
+    fatalError()
   }
 }
