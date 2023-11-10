@@ -4,7 +4,7 @@ extension Result where Failure == Swift.Error {
   ///
   /// - Parameter body: A throwing closure to evaluate.
   @_transparent
-  public init(catching body: () async throws -> Success) async {
+  public init(catching body: @Sendable () async throws -> Success) async {
     do {
       self = .success(try await body())
     } catch {
