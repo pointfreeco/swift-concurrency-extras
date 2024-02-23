@@ -140,7 +140,7 @@ And this is only one small example of async code that is difficult to test. If y
 tries to implement cancellation, or makes use of time-based asynchrony (such as clocks), or
 uses async sequences, or any number of things, then you will come across similar test failures that
 are essentially impossible to fix. You may be able to even get the tests to seemingly pass 
-consistently, but almost alwasy if you run them enough times (thousands or millions of times), you
+consistently, but almost always if you run them enough times (thousands or millions of times), you
 _will_ eventually get a test failure, and that breeds uncertainty in your test suite.
 
 ## Looking to Async Algorithms for inspiration
