@@ -11,7 +11,6 @@ Reliably testable Swift concurrency.
       * [`ActorIsolated` and `LockIsolated`](#actorisolated-and-lockisolated)
       * [Streams](#streams)
       * [Tasks](#tasks)
-      * [`UncheckedSendable`](#uncheckedsendable)
       * [Serial execution](#serial-execution)
   * [Documentation](#documentation)
   * [Other libraries](#other-libraries)
@@ -140,17 +139,6 @@ The library enhances the `Task` type with new functionality.
     suspending the current task a number of times and improve the odds that other async work has
     enough time to start. Prefer the reliability of [serial execution](#serial-execution) instead
     where possible.
-
-### `UncheckedSendable`
-
-A wrapper type that can make any type `Sendable`, but in an unsafe and unchecked way. This type
-should only be used as an alternative to `@preconcurrency import`, which turns off concurrency
-checks for everything in the library. Whereas `UncheckedSendable` allows you to turn off concurrency
-warnings for just one single usage of a particular type.
-
-While [SE-0302][se-0302] mentions future work of ["Adaptor Types for Legacy
-Codebases"][se-0302-unsafetransfer], including an `UnsafeTransfer` type that serves the same
-purpose, it has not landed in Swift.
 
 ### Serial execution
 
