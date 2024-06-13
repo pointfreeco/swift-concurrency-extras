@@ -39,7 +39,7 @@ public final class LockIsolated<Value>: @unchecked Sendable {
   /// - Parameter operation: An operation to be performed on the the underlying value with a lock.
   /// - Returns: The result of the operation.
   public func withValue<T: Sendable>(
-    _ operation: (inout Value) throws -> T
+    _ operation: @Sendable (inout Value) throws -> T
   ) rethrows -> T {
     try self.lock.sync {
       var value = self._value
@@ -93,15 +93,17 @@ extension LockIsolated where Value: Sendable {
   }
 }
 
+@available(*, deprecated, message: "Lock isolated values should not be equatable")
 extension LockIsolated: Equatable where Value: Equatable {
   public static func == (lhs: LockIsolated, rhs: LockIsolated) -> Bool {
-    lhs.withValue { lhsValue in rhs.withValue { rhsValue in lhsValue == rhsValue } }
+    lhs.value == rhs.value
   }
 }
 
+@available(*, deprecated, message: "Lock isolated values should not be hashable")
 extension LockIsolated: Hashable where Value: Hashable {
   public func hash(into hasher: inout Hasher) {
-    self.withValue { hasher.combine($0) }
+    hasher.combine(self.value)
   }
 }
 
