@@ -1,4 +1,4 @@
-#if canImport(Dispatch)
+#if !os(WASI) && canImport(Dispatch)
   import ConcurrencyExtras
   import Dispatch
   import XCTest
