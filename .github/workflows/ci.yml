@@ -29,15 +29,13 @@ jobs:
         run: CONFIG=${{ matrix.config }} make test
 
   linux:
-    name: Linux
+    name: Linux (Swift ${{ matrix.swift }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
         config: ['debug', 'release']
         swift:
           - '5.10'
-    name: Linux (Swift ${{ matrix.swift }})
-    runs-on: ubuntu-latest
     container: swift:${{ matrix.swift }}
     steps:
       - uses: actions/checkout@v4
