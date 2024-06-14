@@ -16,13 +16,13 @@ concurrency:
 jobs:
   library:
     name: macOS
+    runs-on: macos-14
     strategy:
       matrix:
-        xcode: ['14.3.1']
+        xcode: ['15.4']
         config: ['debug', 'release']
-    runs-on: macos-13
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Select Xcode ${{ matrix.xcode }}
         run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Run ${{ matrix.config }} tests
@@ -30,15 +30,17 @@ jobs:
 
   linux:
     name: Linux
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-20.04]
         config: ['debug', 'release']
-    runs-on: ${{ matrix.os }}
+        swift:
+          - '5.10'
+    name: Linux (Swift ${{ matrix.swift }})
+    runs-on: ubuntu-latest
+    container: swift:${{ matrix.swift }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Build
-        run: swift build
+      - uses: actions/checkout@v4
       - name: Run tests
         run: swift test -c ${{ matrix.config }}
 
@@ -48,9 +50,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { toolchain: wasm-5.7.1-RELEASE }
+          - { toolchain: wasm-5.9.2-RELEASE }
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: echo "${{ matrix.toolchain }}" > .swift-version
       - uses: swiftwasm/swiftwasm-action@v5.7
         with:
@@ -66,9 +68,9 @@ jobs:
     steps:
       - uses: compnerd/gha-setup-swift@main
         with:
-          branch: swift-5.8-release
-          tag: 5.8-RELEASE
+          branch: swift-5.10-release
+          tag: 5.10-RELEASE
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run tests
         run: swift build -c ${{ matrix.config }}
