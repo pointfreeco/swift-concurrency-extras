@@ -29,7 +29,7 @@
   /// - Parameter operation: An operation to be performed on the main serial executor.
   @MainActor
   public func withMainSerialExecutor(
-    @_implicitSelfCapture operation: @MainActor @Sendable () async throws -> Void
+    @_implicitSelfCapture operation: @Sendable () async throws -> Void
   ) async rethrows {
     let didUseMainSerialExecutor = uncheckedUseMainSerialExecutor
     defer { uncheckedUseMainSerialExecutor = didUseMainSerialExecutor }
