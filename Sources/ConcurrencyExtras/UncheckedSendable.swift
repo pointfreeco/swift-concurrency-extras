@@ -12,6 +12,12 @@
 ///
 /// To synchronously isolate a value with a lock, see ``LockIsolated``. To asynchronously isolated a
 /// value on an actor, see ``ActorIsolated``.
+#if swift(>=5.10)
+  @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(tvOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(watchOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+#endif
 @dynamicMemberLookup
 @propertyWrapper
 public struct UncheckedSendable<Value>: @unchecked Sendable {
@@ -49,9 +55,28 @@ public struct UncheckedSendable<Value>: @unchecked Sendable {
   }
 }
 
+#if swift(>=5.10)
+  @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(tvOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(watchOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+#endif
 extension UncheckedSendable: Equatable where Value: Equatable {}
+
+#if swift(>=5.10)
+  @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(tvOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(watchOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+#endif
 extension UncheckedSendable: Hashable where Value: Hashable {}
 
+#if swift(>=5.10)
+  @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(tvOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(watchOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+#endif
 extension UncheckedSendable: Decodable where Value: Decodable {
   public init(from decoder: Decoder) throws {
     do {
@@ -63,6 +88,12 @@ extension UncheckedSendable: Decodable where Value: Decodable {
   }
 }
 
+#if swift(>=5.10)
+  @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(tvOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+  @available(watchOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")
+#endif
 extension UncheckedSendable: Encodable where Value: Encodable {
   public func encode(to encoder: Encoder) throws {
     do {
