@@ -40,6 +40,7 @@
 /// ```
 ///
 /// To synchronously isolate a value, see ``LockIsolated``.
+@available(*, deprecated, message: "Use 'LockIsolated' instead.")
 public final actor ActorIsolated<Value> {
   /// The actor-isolated value.
   public var value: Value

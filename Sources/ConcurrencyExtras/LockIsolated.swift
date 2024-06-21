@@ -2,8 +2,8 @@ import Foundation
 
 /// A generic wrapper for isolating a mutable value with a lock.
 ///
-/// To asynchronously isolate a value on an actor, see ``ActorIsolated``. If you trust the
-/// sendability of the underlying value, consider using ``UncheckedSendable``, instead.
+/// If you trust the sendability of the underlying value, consider using ``UncheckedSendable``,
+/// instead.
 @dynamicMemberLookup
 public final class LockIsolated<Value>: @unchecked Sendable {
   private var _value: Value

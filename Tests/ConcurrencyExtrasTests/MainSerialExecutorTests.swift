@@ -17,6 +17,7 @@
       XCTAssertEqual(Array(1...1000), xs.value)
     }
 
+    @available(*, deprecated)
     func testSerializedExecution_WithActor() async {
       let xs = ActorIsolated<[Int]>([])
       await withMainSerialExecutor {

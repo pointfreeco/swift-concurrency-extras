@@ -1,6 +1,7 @@
 import ConcurrencyExtras
 import XCTest
 
+@available(*, deprecated)
 final class ActorIsolatedTests: XCTestCase {
   func testAsyncWithValue() async {
     let numbers = ActorIsolated<Set<Int>>([])
