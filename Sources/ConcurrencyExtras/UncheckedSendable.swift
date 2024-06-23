@@ -10,7 +10,7 @@
 /// > that the type is safe to use from multiple threads, and the compiler cannot help you find
 /// > potential race conditions in your code.
 ///
-/// To synchronously isolate a value with a lock, see ``LockIsolated``. 
+/// To synchronously isolate a value with a lock, see ``LockIsolated``.
 #if swift(>=5.10)
   @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")@available(
     macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead."
