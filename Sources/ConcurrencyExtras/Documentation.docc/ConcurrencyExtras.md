@@ -7,13 +7,10 @@ Useful, testable Swift concurrency.
 This library comes with a number of tools that make working with Swift concurrency easier and more
 testable.
 
-### ActorIsolated and LockIsolated
+### LockIsolated
 
-The ``ActorIsolated`` and ``LockIsolated`` types help wrap other values in an isolated context.
-`ActorIsolated` wraps the value in an actor so that the only way to access and mutate the value is
-through an async/await interface. ``LockIsolated`` wraps the value in a class with a lock, which
-allows you to read and write the value with a synchronous interface. You should prefer to use
-`ActorIsolated` when you have access to an asynchronous context.
+The `LockIsolated` type helps wrap other values in an isolated context. It wraps the value in a 
+class with a lock, which allows you to read and write the value with a synchronous interface.
 
 ### Streams
 
@@ -238,13 +235,12 @@ need to make weaker assertions due to non-determinism, but can still assert on s
 
 ### Data races
 
-- ``ActorIsolated``
 - ``LockIsolated``
 
 ### Serial execution
 
 - <doc:ReliablyTestingAsync>
-- ``withMainSerialExecutor(operation:)-79jpc``
+- ``withMainSerialExecutor(operation:)-5wq73``
 
 ### Preconcurrency
 

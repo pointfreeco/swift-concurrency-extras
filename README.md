@@ -8,7 +8,7 @@
 Reliably testable Swift concurrency.
 
   * [Motivation](#motivation)
-      * [`ActorIsolated` and `LockIsolated`](#actorisolated-and-lockisolated)
+      * [`LockIsolated`](#lockisolated)
       * [Streams](#streams)
       * [Tasks](#tasks)
       * [Serial execution](#serial-execution)
@@ -34,19 +34,16 @@ You can watch all of the episodes [here](https://www.pointfree.co/collections/co
 This library comes with a number of tools that make working with Swift concurrency easier and more
 testable.
 
-  * [`ActorIsolated` and `LockIsolated`](#actorisolated-and-lockisolated)
+  * [`LockIsolated`](#lockisolated)
   * [Streams](#streams)
   * [Tasks](#tasks)
   * [`UncheckedSendable`](#uncheckedsendable)
   * [Serial execution](#serial-execution)
 
-### `ActorIsolated` and `LockIsolated`
+### LockIsolated`
 
-The `ActorIsolated` and `LockIsolated` types help wrap other values in an isolated context.
-`ActorIsolated` wraps the value in an actor so that the only way to access and mutate the value is
-through an async/await interface. `LockIsolated` wraps the value in a class with a lock, which
-allows you to read and write the value with a synchronous interface. You should prefer to use
-`ActorIsolated` when you have access to an asynchronous context.
+The `LockIsolated` type helps wrap other values in an isolated context. It wraps the value in a 
+class with a lock, which allows you to read and write the value with a synchronous interface.
 
 ### Streams
 
