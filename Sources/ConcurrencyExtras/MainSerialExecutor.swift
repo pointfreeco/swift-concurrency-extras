@@ -81,9 +81,10 @@
   private typealias Hook = @convention(thin) (UnownedJob, Original) -> Void
 
   private var swift_task_enqueueGlobal_hook: Hook? {
-    get { _swift_task_enqueueGlobal_hook.pointee }
-    set { _swift_task_enqueueGlobal_hook.pointee = newValue }
+    get { _swift_task_enqueueGlobal_hook.wrappedValue.pointee }
+    set { _swift_task_enqueueGlobal_hook.wrappedValue.pointee = newValue }
   }
-  private let _swift_task_enqueueGlobal_hook: UnsafeMutablePointer<Hook?> =
+  private let _swift_task_enqueueGlobal_hook = UncheckedSendable(
     dlsym(dlopen(nil, 0), "swift_task_enqueueGlobal_hook").assumingMemoryBound(to: Hook?.self)
+  )
 #endif

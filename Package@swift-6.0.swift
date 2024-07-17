@@ -26,7 +26,8 @@ let package = Package(
         "ConcurrencyExtras"
       ]
     ),
-  ]
+  ],
+  swiftLanguageVersions: [.v6]
 )
 
 #if !os(Windows)

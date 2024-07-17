@@ -52,16 +52,16 @@ extension AsyncStream {
   /// ```
   ///
   /// - Parameter sequence: An async sequence.
-  public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element {
+  public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element, S: Sendable {
     let lock = NSLock()
-    var iterator: S.AsyncIterator?
+    let iterator = UncheckedBox<S.AsyncIterator?>(wrappedValue: nil)
     self.init {
       lock.withLock {
-        if iterator == nil {
-          iterator = sequence.makeAsyncIterator()
+        if iterator.wrappedValue == nil {
+          iterator.wrappedValue = sequence.makeAsyncIterator()
         }
       }
-      return try? await iterator?.next()
+      return try? await iterator.wrappedValue?.next()
     }
   }
 
@@ -79,7 +79,7 @@ extension AsyncStream {
 extension AsyncSequence {
   /// Erases this async sequence to an async stream that produces elements till this sequence
   /// terminates (or fails).
-  public func eraseToStream() -> AsyncStream<Element> {
+  public func eraseToStream() -> AsyncStream<Element> where Self: Sendable {
     AsyncStream(self)
   }
 }
