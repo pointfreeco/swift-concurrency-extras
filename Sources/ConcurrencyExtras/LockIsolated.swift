@@ -94,19 +94,19 @@ extension LockIsolated where Value: Sendable {
 }
 
 #if swift(<6)
-@available(*, deprecated, message: "Lock isolated values should not be equatable")
-extension LockIsolated: Equatable where Value: Equatable {
-  public static func == (lhs: LockIsolated, rhs: LockIsolated) -> Bool {
-    lhs.value == rhs.value
+  @available(*, deprecated, message: "Lock isolated values should not be equatable")
+  extension LockIsolated: Equatable where Value: Equatable {
+    public static func == (lhs: LockIsolated, rhs: LockIsolated) -> Bool {
+      lhs.value == rhs.value
+    }
   }
-}
 
-@available(*, deprecated, message: "Lock isolated values should not be hashable")
-extension LockIsolated: Hashable where Value: Hashable {
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(self.value)
+  @available(*, deprecated, message: "Lock isolated values should not be hashable")
+  extension LockIsolated: Hashable where Value: Hashable {
+    public func hash(into hasher: inout Hasher) {
+      hasher.combine(self.value)
+    }
   }
-}
 #endif
 
 extension NSRecursiveLock {
