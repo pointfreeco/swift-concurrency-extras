@@ -93,6 +93,7 @@ extension LockIsolated where Value: Sendable {
   }
 }
 
+#if swift(<6)
 @available(*, deprecated, message: "Lock isolated values should not be equatable")
 extension LockIsolated: Equatable where Value: Equatable {
   public static func == (lhs: LockIsolated, rhs: LockIsolated) -> Bool {
@@ -106,6 +107,7 @@ extension LockIsolated: Hashable where Value: Hashable {
     hasher.combine(self.value)
   }
 }
+#endif
 
 extension NSRecursiveLock {
   @inlinable @discardableResult
