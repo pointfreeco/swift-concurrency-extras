@@ -40,7 +40,7 @@ testable.
   * [`UncheckedSendable`](#uncheckedsendable)
   * [Serial execution](#serial-execution)
 
-### LockIsolated`
+### `LockIsolated`
 
 The `LockIsolated` type helps wrap other values in an isolated context. It wraps the value in a 
 class with a lock, which allows you to read and write the value with a synchronous interface.
