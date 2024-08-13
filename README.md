@@ -37,7 +37,6 @@ testable.
   * [`LockIsolated`](#lockisolated)
   * [Streams](#streams)
   * [Tasks](#tasks)
-  * [`UncheckedSendable`](#uncheckedsendable)
   * [Serial execution](#serial-execution)
 
 ### `LockIsolated`
