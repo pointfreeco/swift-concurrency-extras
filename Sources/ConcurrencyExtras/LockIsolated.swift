@@ -4,6 +4,12 @@ import Foundation
 ///
 /// If you trust the sendability of the underlying value, consider using ``UncheckedSendable``,
 /// instead.
+#if compiler(>=6)
+  @available(iOS, deprecated: 10000, message: "Use 'Mutex', instead.")
+  @available(macOS, deprecated: 10000, message: "Use 'Mutex', instead.")
+  @available(tvOS, deprecated: 10000, message: "Use 'Mutex', instead.")
+  @available(watchOS, deprecated: 10000, message: "Use 'Mutex', instead.")
+#endif
 @dynamicMemberLookup
 public final class LockIsolated<Value>: @unchecked Sendable {
   private var _value: Value
