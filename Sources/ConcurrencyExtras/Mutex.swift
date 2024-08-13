@@ -1,4 +1,4 @@
-#if compiler(>=6)
+#if compiler(>=6) && canImport(Darwin)
   import Foundation
 
   /// A synchronization primitive that protects shared mutable state via mutual exclusion.
