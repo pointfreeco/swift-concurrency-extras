@@ -13,17 +13,17 @@
   @available(watchOS, obsoleted: 11, message: "Use 'Synchronization.Mutex', instead.")
   public struct Mutex<Value: ~Copyable>: ~Copyable {
     @usableFromInline
-    let lock = NSLock()
+    let _lock = NSLock()
 
     @usableFromInline
-    let box: Box
+    let _box: Box
 
     /// Initializes a value of this mutex with the given initial state.
     ///
     /// - Parameter initialValue: The initial value to give to the mutex.
     @_transparent
     public init(_ initialValue: consuming sending Value) {
-      box = Box(initialValue)
+      _box = Box(initialValue)
     }
 
     @usableFromInline
@@ -45,9 +45,9 @@
     public borrowing func withLock<Result: ~Copyable, E: Error>(
       _ body: (inout sending Value) throws(E) -> sending Result
     ) throws(E) -> sending Result {
-      lock.lock()
-      defer { lock.unlock() }
-      return try body(&box.value)
+      _lock.lock()
+      defer { _lock.unlock() }
+      return try body(&_box.value)
     }
 
     /// Attempts to acquire the lock and then calls the given closure if successful.
@@ -55,26 +55,26 @@
     public borrowing func withLockIfAvailable<Result: ~Copyable, E: Error>(
       _ body: (inout sending Value) throws(E) -> sending Result
     ) throws(E) -> sending Result? {
-      guard lock.try() else { return nil  }
-      defer { lock.unlock() }
-      return try body(&box.value)
+      guard _lock.try() else { return nil  }
+      defer { _lock.unlock() }
+      return try body(&_box.value)
     }
   }
 
   extension Mutex where Value == Void {
     @_transparent
     public borrowing func _unsafeLock() {
-      lock.lock()
+      _lock.lock()
     }
 
     @_transparent
     public borrowing func _unsafeTryLock() -> Bool {
-      lock.try()
+      _lock.try()
     }
 
     @_transparent
     public borrowing func _unsafeUnlock() {
-      lock.unlock()
+      _lock.unlock()
     }
   }
 #endif
