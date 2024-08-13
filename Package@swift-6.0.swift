@@ -18,7 +18,10 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "ConcurrencyExtras"
+      name: "ConcurrencyExtras",
+      swiftSettings: [
+        .enableExperimentalFeature("StaticExclusiveOnly"),
+      ]
     ),
     .testTarget(
       name: "ConcurrencyExtrasTests",
@@ -27,7 +30,7 @@ let package = Package(
       ]
     ),
   ],
-  swiftLanguageVersions: [.v6]
+  swiftLanguageModes: [.v6]
 )
 
 #if !os(Windows)
