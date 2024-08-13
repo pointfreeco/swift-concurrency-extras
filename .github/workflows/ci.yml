@@ -52,7 +52,7 @@ jobs:
          with:
            swift-version: "wasm-DEVELOPMENT-SNAPSHOT-2024-08-11-a"
        - name: Build tests
-         run: swift build --triple wasm32-unknown-wasi --build-tests
+         run: swift build --triple wasm32-unknown-wasi --build-tests --static-swift-stdlib
        - name: Run tests
          run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
 
