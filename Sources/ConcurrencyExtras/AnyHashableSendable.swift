@@ -21,3 +21,20 @@ public struct AnyHashableSendable: Hashable, Sendable {
     hasher.combine(base)
   }
 }
+
+extension AnyHashableSendable: CustomDebugStringConvertible {
+  public var debugDescription: String {
+    "AnyHashableSendable(" + String(reflecting: base) + ")"
+  }
+}
+extension AnyHashableSendable: CustomReflectable {
+  public var customMirror: Mirror {
+    Mirror(self, children: ["value": base])
+  }
+}
+
+extension AnyHashableSendable: CustomStringConvertible {
+  public var description: String {
+    String(describing: base)
+  }
+}
