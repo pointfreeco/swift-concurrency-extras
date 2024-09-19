@@ -1,7 +1,6 @@
 import ConcurrencyExtras
 import XCTest
 
-@available(*, deprecated)
 final class AnyHashableSendableTests: XCTestCase {
   func testBasics() {
     XCTAssertEqual(AnyHashableSendable(1), AnyHashableSendable(1))
