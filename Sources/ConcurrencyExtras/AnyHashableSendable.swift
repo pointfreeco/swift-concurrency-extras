@@ -7,14 +7,18 @@ public struct AnyHashableSendable: Hashable, Sendable {
 
   /// Creates a type-erased hashable, sendable value that wraps the given instance.
   public init(_ base: some Hashable & Sendable) {
-    self.base = base
+    if let base = base as? AnyHashableSendable {
+      self = base
+    } else {
+      self.base = base
+    }
   }
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
     func open<T: Equatable>(_ lhs: T) -> Bool {
-      lhs == rhs as? T
+      lhs == rhs.base as? T
     }
-    return open(lhs)
+    return open(lhs.base)
   }
 
   public func hash(into hasher: inout Hasher) {
