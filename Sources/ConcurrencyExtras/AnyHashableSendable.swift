@@ -15,10 +15,7 @@ public struct AnyHashableSendable: Hashable, Sendable {
   }
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
-    func open<T: Equatable>(_ lhs: T) -> Bool {
-      lhs == rhs.base as? T
-    }
-    return open(lhs.base)
+    AnyHashable(lhs.base) == AnyHashable(rhs.base)
   }
 
   public func hash(into hasher: inout Hasher) {
