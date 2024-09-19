@@ -35,6 +35,7 @@ This library comes with a number of tools that make working with Swift concurren
 testable.
 
   * [`LockIsolated`](#lockisolated)
+  * [`AnyHashableSendable`](#anyhashablesendable)
   * [Streams](#streams)
   * [Tasks](#tasks)
   * [Serial execution](#serial-execution)
@@ -43,6 +44,11 @@ testable.
 
 The `LockIsolated` type helps wrap other values in an isolated context. It wraps the value in a 
 class with a lock, which allows you to read and write the value with a synchronous interface.
+
+### `AnyHashableSendable`
+
+The `AnyHashableSendable` type is a type-erased wrapper like `AnyHashable` that preserves the
+sendability of the underlying value.
 
 ### Streams
 

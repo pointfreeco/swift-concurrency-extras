@@ -236,6 +236,7 @@ need to make weaker assertions due to non-determinism, but can still assert on s
 ### Data races
 
 - ``LockIsolated``
+- ``AnyHashableSendable``
 
 ### Serial execution
 
