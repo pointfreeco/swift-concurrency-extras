@@ -1,4 +1,4 @@
-#if !os(WASI) && !os(Windows)
+#if !os(WASI) && !os(Windows) && !os(Android)
   import Foundation
 
   /// Perform an operation on the main serial executor.
