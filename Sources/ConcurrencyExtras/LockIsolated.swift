@@ -16,7 +16,7 @@ public final class LockIsolated<Value>: @unchecked Sendable {
     self._value = try value()
   }
 
-  public subscript<Subject: Sendable>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
+  public subscript<Subject>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
     self.lock.sync {
       self._value[keyPath: keyPath]
     }
@@ -38,7 +38,7 @@ public final class LockIsolated<Value>: @unchecked Sendable {
   ///
   /// - Parameter operation: An operation to be performed on the the underlying value with a lock.
   /// - Returns: The result of the operation.
-  public func withValue<T: Sendable>(
+  public func withValue<T>(
     _ operation: @Sendable (inout Value) throws -> T
   ) rethrows -> T {
     try self.lock.sync {
@@ -84,7 +84,7 @@ public final class LockIsolated<Value>: @unchecked Sendable {
   }
 }
 
-extension LockIsolated where Value: Sendable {
+extension LockIsolated {
   /// The lock-isolated value.
   public var value: Value {
     self.lock.sync {
