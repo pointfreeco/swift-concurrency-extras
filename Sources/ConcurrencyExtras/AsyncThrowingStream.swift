@@ -5,6 +5,14 @@ extension AsyncThrowingStream where Failure == Error {
   /// terminates, rethrowing any failure.
   ///
   /// - Parameter sequence: An async sequence.
+  @available(iOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, any Error>', instead.")
+  @available(
+    macOS, deprecated: 15, message: "Use 'any AsyncSequence<Element, any Error>', instead."
+  )
+  @available(tvOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, any Error>', instead.")
+  @available(
+    watchOS, deprecated: 11, message: "Use 'any AsyncSequence<Element, any Error>', instead."
+  )
   public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element, S: Sendable {
     let lock = NSLock()
     let iterator = UncheckedBox<S.AsyncIterator?>(wrappedValue: nil)
@@ -34,6 +42,14 @@ extension AsyncThrowingStream where Failure == Error {
 extension AsyncSequence {
   /// Erases this async sequence to an async throwing stream that produces elements till this
   /// sequence terminates, rethrowing any error on failure.
+  @available(iOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, any Error>', instead.")
+  @available(
+    macOS, deprecated: 15, message: "Use 'any AsyncSequence<Element, any Error>', instead."
+  )
+  @available(tvOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, any Error>', instead.")
+  @available(
+    watchOS, deprecated: 11, message: "Use 'any AsyncSequence<Element, any Error>', instead."
+  )
   public func eraseToThrowingStream() -> AsyncThrowingStream<Element, Error> where Self: Sendable {
     AsyncThrowingStream(self)
   }

@@ -54,35 +54,6 @@ sendability of the underlying value.
 
 The library comes with numerous helper APIs spread across the two Swift stream types:
 
-  * There are helpers that erase any `AsyncSequence` conformance to either concrete stream type.
-    This allows you to treat the stream type as a kind of "type erased" `AsyncSequence`.
-
-    For example, suppose you have a dependency client like this:
-
-    ```swift
-    struct ScreenshotsClient {
-      var screenshots: () -> AsyncStream<Void>
-    }
-    ```
-
-    Then you can construct a live implementation that "erases" the
-    `NotificationCenter.Notifications` async sequence to a stream:
-
-    ```swift
-    extension ScreenshotsClient {
-      static let live = Self(
-        screenshots: {
-          NotificationCenter.default
-            .notifications(named: UIApplication.userDidTakeScreenshotNotification)
-            .map { _ in }
-            .eraseToStream()  // ⬅️
-        }
-      )
-    }
-    ```
-
-    Use `eraseToThrowingStream()` to propagate failures from throwing async sequences.
-
   * Swift 5.9's `makeStream(of:)` functions have been back-ported. It can be handy in tests that need
     to override a dependency endpoint that returns a stream:
 
