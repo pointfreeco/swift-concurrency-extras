@@ -56,7 +56,10 @@ public struct UncheckedSendable<Value>: @unchecked Sendable {
 }
 
 extension UncheckedSendable: AsyncSequence where Value: AsyncSequence {
-  public func makeAsyncIterator() -> Value.AsyncIterator {
+  public typealias AsyncIterator = Value.AsyncIterator
+  public typealias Element = Value.Element
+
+  public func makeAsyncIterator() -> AsyncIterator {
     value.makeAsyncIterator()
   }
 }
