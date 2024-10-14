@@ -26,7 +26,7 @@ extension AsyncThrowingStream where Failure == Error {
     }
   }
 
-  @available(*, deprecated, message: "Explicitly wrap given sequence in 'UncheckedSendable'.")
+  @available(*, deprecated, message: "Explicitly wrap the given async sequence with 'UncheckedSendable' first.")
   @_disfavoredOverload
   public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element {
     self.init(UncheckedSendable(sequence))
@@ -60,7 +60,7 @@ extension AsyncSequence {
     AsyncThrowingStream(self)
   }
 
-  @available(*, deprecated, message: "Explicitly wrap this sequence in 'UncheckedSendable' before erasing to throwing stream.")
+  @available(*, deprecated, message: "Explicitly wrap this async sequence with 'UncheckedSendable' before erasing to throwing stream.")
   public func eraseToThrowingStream() -> AsyncThrowingStream<Element, Error> {
     AsyncThrowingStream(UncheckedSendable(self))
   }
