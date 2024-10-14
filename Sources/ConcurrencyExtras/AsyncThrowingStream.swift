@@ -27,6 +27,7 @@ extension AsyncThrowingStream where Failure == Error {
   }
 
   @available(*, deprecated, message: "Explicitly wrap given sequence in 'UncheckedSendable'.")
+  @_disfavoredOverload
   public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element {
     self.init(UncheckedSendable(sequence))
   }
