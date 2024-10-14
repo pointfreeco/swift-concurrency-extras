@@ -71,6 +71,12 @@ extension AsyncStream {
     }
   }
 
+  @available(*, deprecated, message: "Explicitly wrap the given async sequence with 'UncheckedSendable' first.")
+  @_disfavoredOverload
+  public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element {
+    self.init(UncheckedSendable(sequence))
+  }
+
   /// An `AsyncStream` that never emits and never completes unless cancelled.
   public static var never: Self {
     Self { _ in }
@@ -93,5 +99,10 @@ extension AsyncSequence {
   )
   public func eraseToStream() -> AsyncStream<Element> where Self: Sendable {
     AsyncStream(self)
+  }
+
+  @available(*, deprecated, message: "Explicitly wrap this async sequence with 'UncheckedSendable' before erasing to stream.")
+  public func eraseToStream() -> AsyncStream<Element> {
+    AsyncStream(UncheckedSendable(self))
   }
 }

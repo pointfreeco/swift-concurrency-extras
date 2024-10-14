@@ -55,6 +55,15 @@ public struct UncheckedSendable<Value>: @unchecked Sendable {
   }
 }
 
+extension UncheckedSendable: AsyncSequence where Value: AsyncSequence {
+  public typealias AsyncIterator = Value.AsyncIterator
+  public typealias Element = Value.Element
+
+  public func makeAsyncIterator() -> AsyncIterator {
+    value.makeAsyncIterator()
+  }
+}
+
 #if swift(>=5.10)
   @available(iOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead.")@available(
     macOS, deprecated: 9999, message: "Use 'nonisolated(unsafe) let', instead."
