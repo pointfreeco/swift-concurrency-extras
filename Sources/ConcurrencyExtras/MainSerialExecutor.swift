@@ -27,6 +27,17 @@
   /// > during the operation.
   ///
   /// - Parameter operation: An operation to be performed on the main serial executor.
+  #if compiler(>=6)
+  @MainActor
+  public func withMainSerialExecutor(
+    @_implicitSelfCapture operation: @isolated(any) () async throws -> Void
+  ) async rethrows {
+    let didUseMainSerialExecutor = uncheckedUseMainSerialExecutor
+    defer { uncheckedUseMainSerialExecutor = didUseMainSerialExecutor }
+    uncheckedUseMainSerialExecutor = true
+    try await operation()
+  }
+  #else
   @MainActor
   public func withMainSerialExecutor(
     @_implicitSelfCapture operation: @Sendable () async throws -> Void
@@ -36,6 +47,7 @@
     uncheckedUseMainSerialExecutor = true
     try await operation()
   }
+  #endif
 
   /// Perform an operation on the main serial executor.
   ///
