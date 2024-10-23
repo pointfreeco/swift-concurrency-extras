@@ -43,18 +43,31 @@ jobs:
         run: swift test -c ${{ matrix.config }}
 
   wasm:
-     name: Wasm
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v4
-       - uses: bytecodealliance/actions/wasmtime/setup@v1
-       - uses: swiftwasm/setup-swiftwasm@v1
-         with:
-           swift-version: "wasm-5.9.2-RELEASE"
-       - name: Build tests
-         run: swift build --triple wasm32-unknown-wasi --build-tests
-       - name: Run tests
-         run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
+    name: SwiftWasm
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - toolchain: swift-DEVELOPMENT-SNAPSHOT-2024-09-12-a
+            swift-sdk: swift-wasm-DEVELOPMENT-SNAPSHOT-2024-09-12-a
+            checksum: 630ce23114580dfae029f832d8ccc8b1ba5136b7f915e82f8e405650e326b562
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bytecodealliance/actions/wasmtime/setup@v1
+      - name: Install Swift and Swift SDK for WebAssembly
+        run: |
+          PREFIX=/opt/swift
+          SWIFT_TOOLCHAIN_TAG="${{ matrix.toolchain }}"
+          SWIFT_SDK_TAG="${{ matrix.swift-sdk }}"
+          set -ex
+          curl -f -o /tmp/swift.tar.gz "https://download.swift.org/development/ubuntu2204/$SWIFT_TOOLCHAIN_TAG/$SWIFT_TOOLCHAIN_TAG-ubuntu22.04.tar.gz"
+          sudo mkdir -p $PREFIX; sudo tar -xzf /tmp/swift.tar.gz -C $PREFIX --strip-component 1
+          $PREFIX/usr/bin/swift sdk install "https://github.com/swiftwasm/swift/releases/download/$SWIFT_SDK_TAG/$SWIFT_SDK_TAG-wasm32-unknown-wasi.artifactbundle.zip" --checksum ${{ matrix.checksum }}
+          echo "$PREFIX/usr/bin" >> $GITHUB_PATH
+      - name: Build tests
+        run: swift build --swift-sdk wasm32-unknown-wasi --build-tests -Xlinker -z -Xlinker stack-size=$((1024 * 1024))
+      - name: Run tests
+        run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
 
   windows:
     name: Windows
@@ -66,8 +79,8 @@ jobs:
     steps:
       - uses: compnerd/gha-setup-swift@main
         with:
-          branch: swift-5.10-release
-          tag: 5.10-RELEASE
+          branch: swift-6.0-release
+          tag: 6.0-RELEASE
 
       - uses: actions/checkout@v4
       - name: Run tests
