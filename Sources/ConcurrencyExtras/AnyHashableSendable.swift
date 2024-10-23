@@ -6,12 +6,18 @@ public struct AnyHashableSendable: Hashable, Sendable {
   public let base: any Hashable & Sendable
 
   /// Creates a type-erased hashable, sendable value that wraps the given instance.
+  @_disfavoredOverload
   public init(_ base: any Hashable & Sendable) {
     if let base = base as? AnyHashableSendable {
       self = base
     } else {
       self.base = base
     }
+  }
+
+  /// Creates a type-erased hashable, sendable value that wraps the given instance.
+  public init(_ base: some Hashable & Sendable) {
+    self.init(base)
   }
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
