@@ -6,7 +6,7 @@ public struct AnyHashableSendable: Hashable, Sendable {
   public let base: any Hashable & Sendable
 
   /// Creates a type-erased hashable, sendable value that wraps the given instance.
-  public init(_ base: some Hashable & Sendable) {
+  public init(_ base: any Hashable & Sendable) {
     if let base = base as? AnyHashableSendable {
       self = base
     } else {
@@ -38,5 +38,11 @@ extension AnyHashableSendable: CustomReflectable {
 extension AnyHashableSendable: CustomStringConvertible {
   public var description: String {
     String(describing: base)
+  }
+}
+
+extension AnyHashableSendable: _HasCustomAnyHashableRepresentation {
+  public func _toCustomAnyHashable() -> AnyHashable? {
+    base as? AnyHashable
   }
 }

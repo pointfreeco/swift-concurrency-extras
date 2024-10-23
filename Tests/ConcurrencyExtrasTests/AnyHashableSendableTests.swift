@@ -15,4 +15,14 @@ final class AnyHashableSendableTests: XCTestCase {
 
     XCTAssertEqual(flat, nested)
   }
+
+  func testExistential() {
+    let base: (any Hashable & Sendable)? = 1
+    let wrapped = base.map(AnyHashableSendable.init)
+    XCTAssertEqual(wrapped, AnyHashableSendable(1))
+  }
+
+  func testAnyHashable() {
+    XCTAssertEqual(AnyHashableSendable(1), 1 as AnyHashable)
+  }
 }
