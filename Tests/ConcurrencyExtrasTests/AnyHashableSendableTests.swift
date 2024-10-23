@@ -25,4 +25,15 @@ final class AnyHashableSendableTests: XCTestCase {
   func testAnyHashable() {
     XCTAssertEqual(AnyHashableSendable(1), 1 as AnyHashable)
   }
+
+  func testLiterals() {
+    XCTAssertEqual(AnyHashableSendable(true), true)
+    XCTAssertEqual(AnyHashableSendable(1), 1)
+    XCTAssertEqual(AnyHashableSendable(4.2), 4.2)
+    XCTAssertEqual(AnyHashableSendable("Blob"), "Blob")
+
+    let bool: AnyHashableSendable = true
+    XCTAssertEqual(bool.base as? Bool, true)
+    XCTAssertEqual(bool as AnyHashable as? Bool, true)
+  }
 }

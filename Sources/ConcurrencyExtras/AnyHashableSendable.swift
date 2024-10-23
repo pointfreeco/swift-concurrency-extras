@@ -46,3 +46,27 @@ extension AnyHashableSendable: _HasCustomAnyHashableRepresentation {
     base as? AnyHashable
   }
 }
+
+extension AnyHashableSendable: ExpressibleByBooleanLiteral {
+  public init(booleanLiteral value: Bool) {
+    self.init(value)
+  }
+}
+
+extension AnyHashableSendable: ExpressibleByFloatLiteral {
+  public init(floatLiteral value: Double) {
+    self.init(value)
+  }
+}
+
+extension AnyHashableSendable: ExpressibleByIntegerLiteral {
+  public init(integerLiteral value: Int) {
+    self.init(value)
+  }
+}
+
+extension AnyHashableSendable: ExpressibleByStringLiteral {
+  public init(stringLiteral value: String) {
+    self.init(value)
+  }
+}
