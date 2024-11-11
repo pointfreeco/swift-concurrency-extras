@@ -1,4 +1,4 @@
-#if !os(WASI) && !os(Windows)
+#if !os(WASI) && !os(Windows) && !os(Android)
   import ConcurrencyExtras
   import XCTest
 
