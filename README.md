@@ -9,6 +9,7 @@ Reliably testable Swift concurrency.
 
   * [Motivation](#motivation)
       * [`LockIsolated`](#lockisolated)
+      * [`AnyHashableSendable`](#anyhashablesendable)
       * [Streams](#streams)
       * [Tasks](#tasks)
       * [Serial execution](#serial-execution)
