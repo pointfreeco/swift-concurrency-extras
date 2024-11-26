@@ -8,10 +8,6 @@ extension Task where Success == Never, Failure == Never {
   /// [this Swift Forums post](https://forums.swift.org/t/reliably-testing-code-that-adopts-swift-concurrency/57304).
   /// You may, however, prefer to use ``withMainSerialExecutor(operation:)-79jpc`` to improve the
   /// reliability of async tests, and to make their execution deterministic.
-  ///
-  /// > Note: When invoked from ``withMainSerialExecutor(operation:)-79jpc``, or when
-  /// > ``uncheckedUseMainSerialExecutor`` is set to `true`, `Task.megaYield()` is equivalent to
-  /// > a single `Task.yield()`.
   public static func megaYield(count: Int = _defaultMegaYieldCount) async {
     // TODO: Investigate why mega yields are still necessary in TCA's test suite.
     // guard !uncheckedUseMainSerialExecutor else {
