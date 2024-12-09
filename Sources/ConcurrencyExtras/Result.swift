@@ -1,4 +1,4 @@
-extension Result where Failure: Swift.Error {
+extension Result {
   /// Creates a new result by evaluating an async throwing closure, capturing the returned value as
   /// a success, or any thrown error as a failure.
   ///
