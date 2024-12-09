@@ -28,6 +28,7 @@ final class ResultTests: XCTestCase {
     }
   }
 
+#if compiler(>=6)
   func g(_ value: Int) async throws(SomeError) -> Int {
     if value == 42 {
       return 42
@@ -36,7 +37,6 @@ final class ResultTests: XCTestCase {
     }
   }
 
-#if compiler(>=6)
   func testTypedThrows() async throws {
     do {
       let res = await Result { () async throws(SomeError) -> Int in try await g(0) }
