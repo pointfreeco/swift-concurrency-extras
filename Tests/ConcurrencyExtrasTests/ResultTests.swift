@@ -2,7 +2,7 @@ import ConcurrencyExtras
 import XCTest
 
 final class ResultTests: XCTestCase {
-  struct SomeError: Error, Equatable { }
+  struct SomeError: Error, Equatable {}
   func f(_ value: Int) async throws -> Int {
     if value == 42 {
       return 42
