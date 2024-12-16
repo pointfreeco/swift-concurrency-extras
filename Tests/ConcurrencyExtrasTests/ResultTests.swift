@@ -11,7 +11,7 @@ final class ResultTests: XCTestCase {
     }
   }
 
-  func testBasics() async throws {
+  func testBasics() async {
     do {
       let res = await Result { try await f(42) }
       XCTAssertEqual(try res.get(), 42)
@@ -28,17 +28,16 @@ final class ResultTests: XCTestCase {
     }
   }
 
-#if compiler(>=6)
-  func g(_ value: Int) async throws(SomeError) -> Int {
-    if value == 42 {
-      return 42
-    } else {
-      throw SomeError()
+  #if compiler(>=6)
+    func g(_ value: Int) async throws(SomeError) -> Int {
+      if value == 42 {
+        return 42
+      } else {
+        throw SomeError()
+      }
     }
-  }
 
-  func testTypedThrows() async throws {
-    do {
+    func testTypedThrows() async {
       let res = await Result { () async throws(SomeError) -> Int in try await g(0) }
       do {
         _ = try res.get()
@@ -46,6 +45,18 @@ final class ResultTests: XCTestCase {
         XCTAssertEqual(error, SomeError())
       }
     }
-  }
-#endif
+
+    func h() async throws(SomeError) -> Int {
+      throw SomeError()
+    }
+
+    func testTypedThrowsInference() async {
+      let res = await Result(catching: h)
+      do {
+        _ = try res.get()
+      } catch {
+        XCTAssertEqual(error, SomeError())
+      }
+    }
+  #endif
 }
