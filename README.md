@@ -1,4 +1,4 @@
-# swift-concurrency-extras
+# Concurrency Extras
 
 [![CI](https://github.com/pointfreeco/swift-concurrency-extras/workflows/CI/badge.svg)](https://github.com/pointfreeco/swift-concurrency-extras/actions?query=workflow%3ACI)
 [![Slack](https://img.shields.io/badge/slack-chat-informational.svg?label=Slack&logo=slack)](https://www.pointfree.co/slack-invite)
@@ -272,7 +272,7 @@ This library is released under the MIT license. See [LICENSE](LICENSE) for detai
 [mbrandonw]: https://github.com/mbrandonw
 [stephencelis]: https://github.com/stephencelis
 [concurrency-testing-collection]: https://www.pointfree.co/collections/concurrency/testing-async-code
-[concurrency-extras-docs]: http://pointfreeco.github.io/swift-concurrency-extras/main/documentation/concurrencyextras
+[concurrency-extras-docs]: https://swiftpackageindex.com/pointfreeco/swift-concurrency-extras/main/documentation/concurrencyextras
 [se-0302]: https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md
 [se-0302-unsafetransfer]: https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#adaptor-types-for-legacy-codebases
 [reliably-testing-swift-concurrency]: https://forums.swift.org/t/reliably-testing-code-that-adopts-swift-concurrency/57304
