@@ -14,9 +14,10 @@ extension Task where Success == Never, Failure == Never {
     //   await Task.yield()
     //   return
     // }
-    for _ in 0..<count {
-      await Task<Void, Never>.detached(priority: .background) { await Task.yield() }.value
-    }
+//    for _ in 0..<count {
+//      await Task<Void, Never>.detached(priority: .background) { await Task.yield() }.value
+//    }
+    await Task<Void, Never> { try? await Task.sleep(nanoseconds: 1_000) }.value
   }
 }
 
