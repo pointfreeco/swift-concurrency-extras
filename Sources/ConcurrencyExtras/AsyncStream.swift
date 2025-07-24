@@ -52,12 +52,6 @@ extension AsyncStream {
   /// ```
   ///
   /// - Parameter sequence: An async sequence.
-  @available(iOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(macOS, deprecated: 15, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(tvOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(
-    watchOS, deprecated: 11, message: "Use 'any AsyncSequence<Element, Never>', instead."
-  )
   public init<S: AsyncSequence>(_ sequence: S) where S.Element == Element, S: Sendable {
     let lock = NSLock()
     let iterator = UncheckedBox<S.AsyncIterator?>(wrappedValue: nil)
@@ -92,14 +86,6 @@ extension AsyncStream {
 }
 
 extension AsyncSequence {
-  /// Erases this async sequence to an async stream that produces elements till this sequence
-  /// terminates (or fails).
-  @available(iOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(macOS, deprecated: 15, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(tvOS, deprecated: 18, message: "Use 'any AsyncSequence<Element, Never>', instead.")
-  @available(
-    watchOS, deprecated: 11, message: "Use 'any AsyncSequence<Element, Never>', instead."
-  )
   public func eraseToStream() -> AsyncStream<Element> where Self: Sendable {
     AsyncStream(self)
   }
