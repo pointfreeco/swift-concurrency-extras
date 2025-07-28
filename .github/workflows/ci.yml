@@ -69,23 +69,6 @@ jobs:
       - name: Run tests
         run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
 
-  windows:
-    name: Windows
-    strategy:
-      matrix:
-        os: [windows-latest]
-        config: ['debug', 'release']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: compnerd/gha-setup-swift@main
-        with:
-          branch: swift-6.0-release
-          tag: 6.0-RELEASE
-
-      - uses: actions/checkout@v4
-      - name: Run tests
-        run: swift build -c ${{ matrix.config }}
-
   android:
     name: Android (Swift 6.0.2)
     runs-on: ubuntu-22.04
