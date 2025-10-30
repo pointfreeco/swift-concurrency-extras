@@ -18,7 +18,10 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "ConcurrencyExtras"
+      name: "ConcurrencyExtras",
+      swiftSettings: [
+        .enableExperimentalFeature("StaticExclusiveOnly"),
+      ]
     ),
     .testTarget(
       name: "ConcurrencyExtrasTests",

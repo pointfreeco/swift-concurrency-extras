@@ -9,79 +9,111 @@ public final class LockIsolated<Value>: @unchecked Sendable {
   private var _value: Value
   private let lock = NSRecursiveLock()
 
-  /// Initializes lock-isolated state around a value.
-  ///
-  /// - Parameter value: A value to isolate with a lock.
-  public init(_ value: @autoclosure @Sendable () throws -> Value) rethrows {
-    self._value = try value()
-  }
-
-  public subscript<Subject: Sendable>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
-    self.lock.sync {
-      self._value[keyPath: keyPath]
+  #if compiler(>=6)
+    /// Initializes lock-isolated state around a value.
+    ///
+    /// - Parameter value: A value to isolate with a lock.
+    public init(_ value: sending @autoclosure () throws -> sending Value) rethrows {
+      self._value = try value()
     }
-  }
-
-  /// Perform an operation with isolated access to the underlying value.
-  ///
-  /// Useful for modifying a value in a single transaction.
-  ///
-  /// ```swift
-  /// // Isolate an integer for concurrent read/write access:
-  /// var count = LockIsolated(0)
-  ///
-  /// func increment() {
-  ///   // Safely increment it:
-  ///   self.count.withValue { $0 += 1 }
-  /// }
-  /// ```
-  ///
-  /// - Parameter operation: An operation to be performed on the the underlying value with a lock.
-  /// - Returns: The result of the operation.
-  public func withValue<T: Sendable>(
-    _ operation: @Sendable (inout Value) throws -> T
-  ) rethrows -> T {
-    try self.lock.sync {
-      var value = self._value
-      defer { self._value = value }
-      return try operation(&value)
+  #else
+    public init(_ value: @autoclosure @Sendable () throws -> Value) rethrows {
+      self._value = try value()
     }
-  }
+  #endif
 
-  /// Overwrite the isolated value with a new value.
-  ///
-  /// ```swift
-  /// // Isolate an integer for concurrent read/write access:
-  /// var count = LockIsolated(0)
-  ///
-  /// func reset() {
-  ///   // Reset it:
-  ///   self.count.setValue(0)
-  /// }
-  /// ```
-  ///
-  /// > Tip: Use ``withValue(_:)`` instead of ``setValue(_:)`` if the value being set is derived
-  /// > from the current value. That is, do this:
-  /// >
-  /// > ```swift
-  /// > self.count.withValue { $0 += 1 }
-  /// > ```
-  /// >
-  /// > ...and not this:
-  /// >
-  /// > ```swift
-  /// > self.count.setValue(self.count + 1)
-  /// > ```
-  /// >
-  /// > ``withValue(_:)`` isolates the entire transaction and avoids data races between reading and
-  /// > writing the value.
-  ///
-  /// - Parameter newValue: The value to replace the current isolated value with.
-  public func setValue(_ newValue: @autoclosure @Sendable () throws -> Value) rethrows {
-    try self.lock.sync {
-      self._value = try newValue()
+  #if compiler(>=6)
+    public subscript<Subject>(dynamicMember keyPath: KeyPath<Value, Subject>) -> sending Subject {
+      self.lock.sync {
+        self._value[keyPath: keyPath]
+      }
     }
-  }
+  #else
+    public subscript<Subject: Sendable>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
+      self.lock.sync {
+        self._value[keyPath: keyPath]
+      }
+    }
+  #endif
+
+  #if compiler(>=6)
+    /// Perform an operation with isolated access to the underlying value.
+    ///
+    /// Useful for modifying a value in a single transaction.
+    ///
+    /// ```swift
+    /// // Isolate an integer for concurrent read/write access:
+    /// var count = LockIsolated(0)
+    ///
+    /// func increment() {
+    ///   // Safely increment it:
+    ///   self.count.withValue { $0 += 1 }
+    /// }
+    /// ```
+    ///
+    /// - Parameter operation: An operation to be performed on the the underlying value with a lock.
+    /// - Returns: The result of the operation.
+    public func withValue<T>(
+      _ operation: sending (inout sending Value) throws -> sending T
+    ) rethrows -> T {
+      try self.lock.sync {
+        try operation(&_value)
+      }
+    }
+  #else
+    public func withValue<T: Sendable>(
+      _ operation: @Sendable (inout Value) throws -> T
+    ) rethrows -> T {
+      try self.lock.sync {
+        var value = self._value
+        defer { self._value = value }
+        return try operation(&value)
+      }
+    }
+  #endif
+
+  #if compiler(>=6)
+    /// Overwrite the isolated value with a new value.
+    ///
+    /// ```swift
+    /// // Isolate an integer for concurrent read/write access:
+    /// var count = LockIsolated(0)
+    ///
+    /// func reset() {
+    ///   // Reset it:
+    ///   self.count.setValue(0)
+    /// }
+    /// ```
+    ///
+    /// > Tip: Use ``withValue(_:)`` instead of ``setValue(_:)`` if the value being set is derived
+    /// > from the current value. That is, do this:
+    /// >
+    /// > ```swift
+    /// > self.count.withValue { $0 += 1 }
+    /// > ```
+    /// >
+    /// > ...and not this:
+    /// >
+    /// > ```swift
+    /// > self.count.setValue(self.count + 1)
+    /// > ```
+    /// >
+    /// > ``withValue(_:)`` isolates the entire transaction and avoids data races between reading and
+    /// > writing the value.
+    ///
+    /// - Parameter newValue: The value to replace the current isolated value with.
+    public func setValue(_ newValue: sending @autoclosure () throws -> sending Value) rethrows {
+      try self.lock.sync {
+        self._value = try newValue()
+      }
+    }
+  #else
+    public func setValue(_ newValue: @autoclosure @Sendable () throws -> Value) rethrows {
+      try self.lock.sync {
+        self._value = try newValue()
+      }
+    }
+  #endif
 }
 
 extension LockIsolated where Value: Sendable {
