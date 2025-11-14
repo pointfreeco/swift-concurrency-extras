@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -26,7 +26,8 @@ let package = Package(
         "ConcurrencyExtras"
       ]
     ),
-  ]
+  ],
+  swiftLanguageModes: [.v6]
 )
 
 #if !os(Windows)
@@ -35,10 +36,3 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
   )
 #endif
-
-for target in package.targets {
-  target.swiftSettings = target.swiftSettings ?? []
-  target.swiftSettings!.append(contentsOf: [
-    .enableExperimentalFeature("StrictConcurrency")
-  ])
-}
