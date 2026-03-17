@@ -57,6 +57,21 @@
       XCTAssertEqual(lockIsolated.y, testValue.y)
     }
 
+    func testDynamicMemberLookupMutation() {
+      struct TestValue: Sendable {
+        var x = 0
+        var y = 10
+      }
+
+      let testValue = TestValue()
+      let lockIsolated = LockIsolated(testValue)
+
+      lockIsolated.x = 100
+
+      XCTAssertEqual(lockIsolated.x, 100)
+      XCTAssertEqual(lockIsolated.y, 10)
+    }
+
     func testWithValue() {
       let initialValue = 0
       let lockIsolated = LockIsolated(initialValue)

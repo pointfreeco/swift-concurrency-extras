@@ -22,6 +22,19 @@ public final class LockIsolated<Value>: @unchecked Sendable {
     }
   }
 
+  public subscript<Subject: Sendable>(dynamicMember keyPath: WritableKeyPath<Value, Subject>) -> Subject {
+    get {
+      self.lock.sync {
+        self._value[keyPath: keyPath]
+      }
+    }
+    set {
+      self.lock.sync {
+        self._value[keyPath: keyPath] = newValue
+      }
+    }
+  }
+
   /// Perform an operation with isolated access to the underlying value.
   ///
   /// Useful for modifying a value in a single transaction.
