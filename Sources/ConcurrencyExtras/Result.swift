@@ -5,7 +5,9 @@
     ///
     /// - Parameter body: A throwing closure to evaluate.
     @_transparent
-    public init(catching body: () async throws(Failure) -> Success) async {
+    public nonisolated(nonsending) init(
+      catching body: nonisolated(nonsending) () async throws(Failure) -> Success
+    ) async {
       do {
         self = .success(try await body())
       } catch {

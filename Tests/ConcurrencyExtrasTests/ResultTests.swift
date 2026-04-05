@@ -3,7 +3,7 @@ import XCTest
 
 final class ResultTests: XCTestCase {
   struct SomeError: Error, Equatable {}
-  func f(_ value: Int) async throws -> Int {
+  nonisolated(nonsending) func f(_ value: Int) async throws -> Int {
     if value == 42 {
       return 42
     } else {
@@ -29,7 +29,7 @@ final class ResultTests: XCTestCase {
   }
 
   #if compiler(>=6)
-    func g(_ value: Int) async throws(SomeError) -> Int {
+    nonisolated(nonsending) func g(_ value: Int) async throws(SomeError) -> Int {
       if value == 42 {
         return 42
       } else {
