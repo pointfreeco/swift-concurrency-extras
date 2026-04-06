@@ -1,9 +1,9 @@
 import ConcurrencyExtras
-import XCTest
+import Testing
 
-final class ResultTests: XCTestCase {
+struct ResultTests {
   struct SomeError: Error, Equatable {}
-  nonisolated(nonsending) func f(_ value: Int) async throws -> Int {
+  func f(_ value: Int) async throws -> Int {
     if value == 42 {
       return 42
     } else {
@@ -11,25 +11,25 @@ final class ResultTests: XCTestCase {
     }
   }
 
-  func testBasics() async {
+  @Test func basics() async throws {
     do {
       let res = await Result { try await f(42) }
-      XCTAssertEqual(try res.get(), 42)
+      #expect(try res.get() == 42)
     }
     do {
       let res = await Result { try await f(0) }
       do {
         _ = try res.get()
       } catch let error as SomeError {
-        XCTAssertEqual(error, SomeError())
+        #expect(error == SomeError())
       } catch {
-        XCTFail("unexpected error: \(error)")
+        Issue.record(error, "unexpected error: \(error)")
       }
     }
   }
 
   #if compiler(>=6)
-    nonisolated(nonsending) func g(_ value: Int) async throws(SomeError) -> Int {
+    func g(_ value: Int) async throws(SomeError) -> Int {
       if value == 42 {
         return 42
       } else {
@@ -37,12 +37,12 @@ final class ResultTests: XCTestCase {
       }
     }
 
-    func testTypedThrows() async {
+    @Test func typedThrows() async {
       let res = await Result { () async throws(SomeError) -> Int in try await g(0) }
       do {
         _ = try res.get()
       } catch {
-        XCTAssertEqual(error, SomeError())
+        #expect(error == SomeError())
       }
     }
 
@@ -50,12 +50,12 @@ final class ResultTests: XCTestCase {
       throw SomeError()
     }
 
-    func testTypedThrowsInference() async {
+    @Test func typedThrowsInference() async {
       let res = await Result(catching: h)
       do {
         _ = try res.get()
       } catch {
-        XCTAssertEqual(error, SomeError())
+        #expect(error == SomeError())
       }
     }
   #endif
