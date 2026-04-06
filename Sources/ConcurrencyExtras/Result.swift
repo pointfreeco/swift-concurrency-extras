@@ -1,4 +1,4 @@
-#if compiler(>=6)
+#if compiler(>=6.2)
   extension Result {
     /// Creates a new result by evaluating an async throwing closure, capturing the returned value as
     /// a success, or any thrown error as a failure.
@@ -7,6 +7,23 @@
     @_transparent
     public nonisolated(nonsending) init(
       catching body: nonisolated(nonsending) () async throws(Failure) -> Success
+    ) async {
+      do {
+        self = .success(try await body())
+      } catch {
+        self = .failure(error)
+      }
+    }
+  }
+#elseif compiler(>=6)
+  extension Result {
+    /// Creates a new result by evaluating an async throwing closure, capturing the returned value as
+    /// a success, or any thrown error as a failure.
+    ///
+    /// - Parameter body: A throwing closure to evaluate.
+    @_transparent
+    public init(
+      catching body: () async throws(Failure) -> Success
     ) async {
       do {
         self = .success(try await body())
