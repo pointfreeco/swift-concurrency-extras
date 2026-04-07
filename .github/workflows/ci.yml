@@ -16,13 +16,13 @@ concurrency:
 jobs:
   library:
     name: macOS
-    runs-on: macos-14
+    runs-on: macos-26
     strategy:
       matrix:
-        xcode: ['15.4']
+        xcode: ['26.4']
         config: ['debug', 'release']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Select Xcode ${{ matrix.xcode }}
         run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Run ${{ matrix.config }} tests
@@ -35,10 +35,10 @@ jobs:
       matrix:
         config: ['debug', 'release']
         swift:
-          - '5.10'
+          - '6.3'
     container: swift:${{ matrix.swift }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run tests
         run: swift test -c ${{ matrix.config }}
 
@@ -48,11 +48,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - toolchain: swift-DEVELOPMENT-SNAPSHOT-2024-09-12-a
-            swift-sdk: swift-wasm-DEVELOPMENT-SNAPSHOT-2024-09-12-a
-            checksum: 630ce23114580dfae029f832d8ccc8b1ba5136b7f915e82f8e405650e326b562
+          - toolchain: swift-6.3-RELEASE
+            swift-sdk: swift-wasm-6.3-RELEASE
+            checksum: 6704d137e532f1ac31eafedd80658f9ee61239f2b6291216a02da32361ea9dcb
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: bytecodealliance/actions/wasmtime/setup@v1
       - name: Install Swift and Swift SDK for WebAssembly
         run: |
@@ -60,20 +60,20 @@ jobs:
           SWIFT_TOOLCHAIN_TAG="${{ matrix.toolchain }}"
           SWIFT_SDK_TAG="${{ matrix.swift-sdk }}"
           set -ex
-          curl -f -o /tmp/swift.tar.gz "https://download.swift.org/development/ubuntu2204/$SWIFT_TOOLCHAIN_TAG/$SWIFT_TOOLCHAIN_TAG-ubuntu22.04.tar.gz"
+          curl -f -o /tmp/swift.tar.gz "https://download.swift.org/swift-6.3-release/ubuntu2204/$SWIFT_TOOLCHAIN_TAG/$SWIFT_TOOLCHAIN_TAG-ubuntu22.04.tar.gz"
           sudo mkdir -p $PREFIX; sudo tar -xzf /tmp/swift.tar.gz -C $PREFIX --strip-component 1
-          $PREFIX/usr/bin/swift sdk install "https://github.com/swiftwasm/swift/releases/download/$SWIFT_SDK_TAG/$SWIFT_SDK_TAG-wasm32-unknown-wasi.artifactbundle.zip" --checksum ${{ matrix.checksum }}
+          $PREFIX/usr/bin/swift sdk install "https://github.com/swiftwasm/swift/releases/download/$SWIFT_SDK_TAG/$SWIFT_SDK_TAG-wasm32-unknown-wasip1.artifactbundle.zip" --checksum ${{ matrix.checksum }}
           echo "$PREFIX/usr/bin" >> $GITHUB_PATH
       - name: Build tests
-        run: swift build --swift-sdk wasm32-unknown-wasi --build-tests -Xlinker -z -Xlinker stack-size=$((1024 * 1024))
+        run: swift build --swift-sdk wasm32-unknown-wasip1 --build-tests -Xlinker -z -Xlinker stack-size=$((1024 * 1024))
       - name: Run tests
         run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
 
   android:
-    name: Android (Swift 6.0.2)
+    name: Android
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Run Android Tests
         uses: skiptools/swift-android-action@v2
