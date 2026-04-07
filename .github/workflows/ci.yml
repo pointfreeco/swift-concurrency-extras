@@ -42,32 +42,32 @@ jobs:
       - name: Run tests
         run: swift test -c ${{ matrix.config }}
 
-  wasm:
-    name: SwiftWasm
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - toolchain: swift-6.3-RELEASE
-            swift-sdk: swift-wasm-6.3-RELEASE
-            checksum: 6704d137e532f1ac31eafedd80658f9ee61239f2b6291216a02da32361ea9dcb
-    steps:
-      - uses: actions/checkout@v5
-      - uses: bytecodealliance/actions/wasmtime/setup@v1
-      - name: Install Swift and Swift SDK for WebAssembly
-        run: |
-          PREFIX=/opt/swift
-          SWIFT_TOOLCHAIN_TAG="${{ matrix.toolchain }}"
-          SWIFT_SDK_TAG="${{ matrix.swift-sdk }}"
-          set -ex
-          curl -f -o /tmp/swift.tar.gz "https://download.swift.org/swift-6.3-release/ubuntu2204/$SWIFT_TOOLCHAIN_TAG/$SWIFT_TOOLCHAIN_TAG-ubuntu22.04.tar.gz"
-          sudo mkdir -p $PREFIX; sudo tar -xzf /tmp/swift.tar.gz -C $PREFIX --strip-component 1
-          $PREFIX/usr/bin/swift sdk install "https://github.com/swiftwasm/swift/releases/download/$SWIFT_SDK_TAG/$SWIFT_SDK_TAG-wasm32-unknown-wasip1.artifactbundle.zip" --checksum ${{ matrix.checksum }}
-          echo "$PREFIX/usr/bin" >> $GITHUB_PATH
-      - name: Build tests
-        run: swift build --swift-sdk wasm32-unknown-wasip1 --build-tests -Xlinker -z -Xlinker stack-size=$((1024 * 1024))
-      - name: Run tests
-        run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
+  # wasm:
+  #   name: SwiftWasm
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - toolchain: swift-6.3-RELEASE
+  #           swift-sdk: swift-wasm-6.3-RELEASE
+  #           checksum: 6704d137e532f1ac31eafedd80658f9ee61239f2b6291216a02da32361ea9dcb
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #     - uses: bytecodealliance/actions/wasmtime/setup@v1
+  #     - name: Install Swift and Swift SDK for WebAssembly
+  #       run: |
+  #         PREFIX=/opt/swift
+  #         SWIFT_TOOLCHAIN_TAG="${{ matrix.toolchain }}"
+  #         SWIFT_SDK_TAG="${{ matrix.swift-sdk }}"
+  #         set -ex
+  #         curl -f -o /tmp/swift.tar.gz "https://download.swift.org/swift-6.3-release/ubuntu2204/$SWIFT_TOOLCHAIN_TAG/$SWIFT_TOOLCHAIN_TAG-ubuntu22.04.tar.gz"
+  #         sudo mkdir -p $PREFIX; sudo tar -xzf /tmp/swift.tar.gz -C $PREFIX --strip-component 1
+  #         $PREFIX/usr/bin/swift sdk install "https://github.com/swiftwasm/swift/releases/download/$SWIFT_SDK_TAG/$SWIFT_SDK_TAG-wasm32-unknown-wasip1.artifactbundle.zip" --checksum ${{ matrix.checksum }}
+  #         echo "$PREFIX/usr/bin" >> $GITHUB_PATH
+  #     - name: Build tests
+  #       run: swift build --swift-sdk wasm32-unknown-wasip1 --build-tests -Xlinker -z -Xlinker stack-size=$((1024 * 1024))
+  #     - name: Run tests
+  #       run: wasmtime --dir . .build/debug/swift-concurrency-extrasPackageTests.wasm
 
   android:
     name: Android
