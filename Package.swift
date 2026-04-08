@@ -14,6 +14,10 @@ let package = Package(
     .library(
       name: "ConcurrencyExtras",
       targets: ["ConcurrencyExtras"]
+    ),
+    .library(
+      name: "ConcurrencyExtrasTestSupport",
+      targets: ["ConcurrencyExtrasTestSupport"]
     )
   ],
   targets: [
@@ -25,6 +29,9 @@ let package = Package(
       dependencies: [
         "ConcurrencyExtras"
       ]
+    ),
+    .target(
+      name: "ConcurrencyExtrasTestSupport"
     ),
   ],
   swiftLanguageModes: [.v6]
