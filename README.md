@@ -13,6 +13,7 @@ Reliably testable Swift concurrency.
       * [Streams](#streams)
       * [Tasks](#tasks)
       * [Serial execution](#serial-execution)
+      * [`.taskLocal` test trait](#tasklocal-test-trait)
   * [Documentation](#documentation)
   * [Other libraries](#other-libraries)
   * [Learn more](#learn-more)
@@ -225,6 +226,19 @@ inline async closures that do not actually perform async work:
 ```
 
 That small change makes this test pass deterministically, 100% of the time.
+
+### `.taskLocal` test trait
+
+The library comes with a Swift Testing trait that overrides a task local for the duration of a test
+or suite:
+
+```swift
+@TaskLocal var isEnabled = false
+
+@Test(.taskLocal($isEnabled, true)) func basics() {
+  #expect(isEnabled == true)
+}
+```
 
 ## Documentation
 

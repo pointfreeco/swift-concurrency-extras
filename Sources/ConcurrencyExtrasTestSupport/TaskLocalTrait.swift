@@ -28,7 +28,7 @@
   ///   }
   /// }
   /// ```
-  public struct TaskLocalTrait<Value: Sendable>: TestScoping, TestTrait {
+  public struct TaskLocalTrait<Value: Sendable>: SuiteTrait, TestScoping, TestTrait {
     public let isRecursive = true
 
     fileprivate let taskLocal: TaskLocal<Value>
