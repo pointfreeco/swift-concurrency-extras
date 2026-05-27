@@ -12,4 +12,5 @@ testable.
 ### Traits
 
 - ``Testing/Trait/taskLocal(_:_:)``
+- ``_Concurrency/TaskLocal/set(_:)``
 - ``ConcurrencyExtrasTestSupport/TaskLocalTrait``

@@ -4,6 +4,12 @@
   extension Trait {
     /// Override a task local value for the duration of a test or suite.
     ///
+    /// ```swift
+    /// @Suite(.taskLocal($myValue, 42)) struct MyTests {
+    ///   // ...
+    /// }
+    /// ```
+    ///
     /// - Parameters:
     ///   - taskLocal: The task local to override.
     ///   - value: The value to set.
@@ -13,6 +19,23 @@
     ) -> Self
     where Self == TaskLocalTrait<Value> {
       TaskLocalTrait(taskLocal: taskLocal, value: value)
+    }
+  }
+
+  extension TaskLocal {
+    /// Override a task local value for the duration of a test or suite.
+    ///
+    /// A convenience method version of ``Testing/Trait/taskLocal(_:_:)``:
+    ///
+    /// ```swift
+    /// @Suite($myValue.set(42)) struct MyTests {
+    ///   // ...
+    /// }
+    /// ```
+    ///
+    /// - Parameter value: The value to set.
+    public func `set`(_ value: Value) -> TaskLocalTrait<Value> {
+      .taskLocal(self, value)
     }
   }
 
