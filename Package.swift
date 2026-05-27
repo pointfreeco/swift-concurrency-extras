@@ -14,11 +14,18 @@ let package = Package(
     .library(
       name: "ConcurrencyExtras",
       targets: ["ConcurrencyExtras"]
-    )
+    ),
+    .library(
+      name: "ConcurrencyExtrasTestSupport",
+      targets: ["ConcurrencyExtrasTestSupport"]
+    ),
   ],
   targets: [
     .target(
       name: "ConcurrencyExtras"
+    ),
+    .target(
+      name: "ConcurrencyExtrasTestSupport"
     ),
     .testTarget(
       name: "ConcurrencyExtrasTests",
