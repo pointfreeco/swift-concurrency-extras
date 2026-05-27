@@ -37,11 +37,9 @@ let package = Package(
   )
 #endif
 
-#if compiler(>=6.2)
-  for target in package.targets {
-    target.swiftSettings = target.swiftSettings ?? []
-    target.swiftSettings! += [
-      .enableUpcomingFeature("NonisolatedNonsendingByDefault")
-    ]
-  }
-#endif
+for target in package.targets {
+  target.swiftSettings = target.swiftSettings ?? []
+  target.swiftSettings?.append(contentsOf: [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault")
+  ])
+}
