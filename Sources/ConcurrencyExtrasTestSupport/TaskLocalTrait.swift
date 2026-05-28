@@ -1,5 +1,5 @@
 #if compiler(>=6.1)
-  import Testing
+  public import Testing
 
   extension Trait {
     /// Override a task local value for the duration of a test or suite.

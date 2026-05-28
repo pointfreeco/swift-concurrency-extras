@@ -1,4 +1,4 @@
-import Foundation
+public import Foundation
 
 /// A generic wrapper for isolating a mutable value with a lock.
 ///
