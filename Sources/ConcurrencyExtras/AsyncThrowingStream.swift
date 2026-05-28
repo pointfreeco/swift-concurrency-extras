@@ -1,6 +1,6 @@
 import Foundation
 
-extension AsyncThrowingStream where Failure == Error {
+extension AsyncThrowingStream where Failure == any Error {
   /// Produces an `AsyncThrowingStream` from an `AsyncSequence` by consuming the sequence till it
   /// terminates, rethrowing any failure.
   ///
@@ -43,7 +43,8 @@ extension AsyncThrowingStream where Failure == Error {
 extension AsyncSequence {
   /// Erases this async sequence to an async throwing stream that produces elements till this
   /// sequence terminates, rethrowing any error on failure.
-  public func eraseToThrowingStream() -> AsyncThrowingStream<Element, Error> where Self: Sendable {
+  public func eraseToThrowingStream() -> AsyncThrowingStream<Element, any Error>
+  where Self: Sendable {
     AsyncThrowingStream(self)
   }
 
@@ -52,7 +53,7 @@ extension AsyncSequence {
     message:
       "Explicitly wrap this async sequence with 'UncheckedSendable' before erasing to throwing stream."
   )
-  public func eraseToThrowingStream() -> AsyncThrowingStream<Element, Error> {
+  public func eraseToThrowingStream() -> AsyncThrowingStream<Element, any Error> {
     AsyncThrowingStream(UncheckedSendable(self))
   }
 }

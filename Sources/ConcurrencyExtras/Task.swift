@@ -64,7 +64,7 @@ extension Task where Failure == Never {
   }
 }
 
-extension Task where Failure == Error {
+extension Task where Failure == any Error {
   /// Waits for the result of the task, propagating cancellation to the task.
   ///
   /// Equivalent to wrapping a call to `Task.value` in `withTaskCancellationHandler`.
