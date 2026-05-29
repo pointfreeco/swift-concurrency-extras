@@ -62,7 +62,9 @@
       testCase: Test.Case?,
       performing function: @concurrent () async throws -> Void
     ) async throws {
-      try await taskLocal.withValue(value, operation: function)
+      try await taskLocal.withValue(value) {
+        try await function()
+      }
     }
   }
 #endif
