@@ -54,7 +54,7 @@ for target in package.targets {
     .enableUpcomingFeature("MemberImportVisibility"),
     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
   ])
-  #if compiler(>=6.4)
+  #if compiler(>=6.2)
     target.swiftSettings?.append(contentsOf: [
       .treatAllWarnings(as: .error)
     ])
