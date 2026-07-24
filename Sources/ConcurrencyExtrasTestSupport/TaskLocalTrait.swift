@@ -15,7 +15,7 @@
     ///   - value: The value to set.
     public static func taskLocal<Value: Sendable>(
       _ taskLocal: TaskLocal<Value>,
-      _ value: Value
+      _ value: @Sendable @escaping @autoclosure () throws -> Value
     ) -> Self
     where Self == TaskLocalTrait<Value> {
       TaskLocalTrait(taskLocal: taskLocal, value: value)
@@ -25,17 +25,10 @@
   extension TaskLocal {
     /// Override a task local value for the duration of a test or suite.
     ///
-    /// A convenience method version of ``Testing/Trait/taskLocal(_:_:)``:
-    ///
-    /// ```swift
-    /// @Suite($myValue.set(42)) struct MyTests {
-    ///   // ...
-    /// }
-    /// ```
-    ///
     /// - Parameter value: The value to set.
-    public func `set`(_ value: Value) -> TaskLocalTrait<Value> {
-      .taskLocal(self, value)
+    @available(*, deprecated, message: "Use 'taskLocal(_:_) instead")
+    public func `set`(_ value: @Sendable @escaping @autoclosure () throws -> Value) -> TaskLocalTrait<Value> {
+      .taskLocal(self, try value())
     }
   }
 
@@ -55,14 +48,16 @@
     public let isRecursive = true
 
     fileprivate let taskLocal: TaskLocal<Value>
-    fileprivate let value: Value
+    fileprivate let value: @Sendable () throws -> Value
 
     public func provideScope(
       for test: Test,
       testCase: Test.Case?,
       performing function: @concurrent () async throws -> Void
     ) async throws {
-      try await taskLocal.withValue(value, operation: function)
+      try await taskLocal.withValue(value()) {
+        try await function()
+      }
     }
   }
 #endif
