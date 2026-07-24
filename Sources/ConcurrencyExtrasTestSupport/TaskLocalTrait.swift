@@ -27,7 +27,9 @@
     ///
     /// - Parameter value: The value to set.
     @available(*, deprecated, message: "Use 'taskLocal(_:_) instead")
-    public func `set`(_ value: @Sendable @escaping @autoclosure () throws -> Value) -> TaskLocalTrait<Value> {
+    public func `set`(_ value: @Sendable @escaping @autoclosure () throws -> Value)
+      -> TaskLocalTrait<Value>
+    {
       .taskLocal(self, try value())
     }
   }
