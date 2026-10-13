@@ -34,18 +34,26 @@ public let _defaultMegaYieldCount = max(
 extension Task where Failure == Never {
   /// An async function that never returns.
   public static func never() async throws -> Success {
-    for await element in AsyncStream<Success>.never {
-      return element
+    try Task<Never, Never>.checkCancellation()
+    var continuation: CheckedContinuation<Success, any Error>!
+    return try await withTaskCancellationHandler {
+      try await withCheckedThrowingContinuation { continuation = $0 }
+    } onCancel: {
+      continuation.resume(throwing: Swift.CancellationError())
     }
-    throw _Concurrency.CancellationError()
   }
 }
 
 extension Task where Success == Never, Failure == Never {
   /// An async function that never returns.
   public static func never() async throws {
-    for await _ in AsyncStream<Never>.never {}
-    throw _Concurrency.CancellationError()
+    try Task.checkCancellation()
+    var continuation: CheckedContinuation<Void, any Error>!
+    try await withTaskCancellationHandler {
+      try await withCheckedThrowingContinuation { continuation = $0 }
+    } onCancel: {
+      continuation.resume(throwing: Swift.CancellationError())
+    }
   }
 }
 
