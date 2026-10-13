@@ -9,11 +9,6 @@ extension Task where Success == Never, Failure == Never {
   /// You may, however, prefer to use ``withMainSerialExecutor(operation:)-79jpc`` to improve the
   /// reliability of async tests, and to make their execution deterministic.
   public static func megaYield(count: Int = _defaultMegaYieldCount) async {
-    // TODO: Investigate why mega yields are still necessary in TCA's test suite.
-    // guard !uncheckedUseMainSerialExecutor else {
-    //   await Task.yield()
-    //   return
-    // }
     for _ in 0..<count {
       await Task<Void, Never>.detached(priority: .background) { await Task.yield() }.value
     }
