@@ -9,11 +9,6 @@ extension Task where Success == Never, Failure == Never {
   /// You may, however, prefer to use ``withMainSerialExecutor(operation:)-79jpc`` to improve the
   /// reliability of async tests, and to make their execution deterministic.
   public static func megaYield(count: Int = _defaultMegaYieldCount) async {
-    // TODO: Investigate why mega yields are still necessary in TCA's test suite.
-    // guard !uncheckedUseMainSerialExecutor else {
-    //   await Task.yield()
-    //   return
-    // }
     for _ in 0..<count {
       await Task<Void, Never>.detached(priority: .background) { await Task.yield() }.value
     }
@@ -34,18 +29,38 @@ public let _defaultMegaYieldCount = max(
 extension Task where Failure == Never {
   /// An async function that never returns.
   public static func never() async throws -> Success {
-    for await element in AsyncStream<Success>.never {
-      return element
-    }
-    throw _Concurrency.CancellationError()
+    #if compiler(>=6.4)
+      try Task<Never, Never>.checkCancellation()
+      var continuation: CheckedContinuation<Success, any Error>!
+      return try await withTaskCancellationHandler {
+        try await withCheckedThrowingContinuation { continuation = $0 }
+      } onCancel: {
+        continuation.resume(throwing: Swift.CancellationError())
+      }
+    #else
+      for await element in AsyncStream<Success>.never {
+        return element
+      }
+      throw _Concurrency.CancellationError()
+    #endif
   }
 }
 
 extension Task where Success == Never, Failure == Never {
   /// An async function that never returns.
   public static func never() async throws {
-    for await _ in AsyncStream<Never>.never {}
-    throw _Concurrency.CancellationError()
+    #if compiler(>=6.4)
+      try Task.checkCancellation()
+      var continuation: CheckedContinuation<Void, any Error>!
+      try await withTaskCancellationHandler {
+        try await withCheckedThrowingContinuation { continuation = $0 }
+      } onCancel: {
+        continuation.resume(throwing: Swift.CancellationError())
+      }
+    #else
+      for await _ in AsyncStream<Never>.never {}
+      throw _Concurrency.CancellationError()
+    #endif
   }
 }
 
