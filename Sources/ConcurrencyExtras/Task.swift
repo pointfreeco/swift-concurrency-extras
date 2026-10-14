@@ -30,7 +30,7 @@ extension Task where Failure == Never {
   /// An async function that never returns.
   public static func never() async throws -> Success {
     #if compiler(>=6.4)
-      try await Task<Never, Never>.never() as Void
+      try await Task<Never, Never>.never()
       throw Swift.CancellationError()
     #else
       for await element in AsyncStream<Success>.never {
@@ -46,9 +46,7 @@ extension Task where Success == Never, Failure == Never {
   public static func never() async throws {
     #if compiler(>=6.4)
       try Task.checkCancellation()
-      // The cancellation handler can run before the continuation is stored. The runtime marks the
-      // task cancelled before running the handler, so checking under the lock covers that case.
-      let continuation = LockIsolated<CheckedContinuation<Void, any Error>?>(nil)
+      let continuation = LockIsolated<CheckedContinuation<Never, any Error>?>(nil)
       try await withTaskCancellationHandler {
         try await withCheckedThrowingContinuation { newContinuation in
           let isCancelled = continuation.withValue { continuation in
@@ -56,7 +54,11 @@ extension Task where Success == Never, Failure == Never {
             continuation = newContinuation
             return false
           }
-          if isCancelled { newContinuation.resume(throwing: Swift.CancellationError()) }
+          guard !isCancelled
+          else {
+            newContinuation.resume(throwing: Swift.CancellationError())
+            return
+          }
         }
       } onCancel: {
         continuation.withValue { $0.take() }?.resume(throwing: Swift.CancellationError())

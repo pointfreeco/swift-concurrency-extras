@@ -26,8 +26,6 @@
       #expect(didFinish == true)
     }
 
-    // Cancellation propagated from a parent can reach `never()` before its continuation is
-    // stored. The race is narrow, so this cancels enough times to hit it reliably.
     @Test func `Task.never() throws when cancelled while suspending`() async {
       await withTaskGroup(of: Void.self) { workers in
         for _ in 0..<8 {
