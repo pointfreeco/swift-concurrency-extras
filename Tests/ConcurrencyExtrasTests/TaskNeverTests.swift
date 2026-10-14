@@ -25,5 +25,29 @@
       }
       #expect(didFinish == true)
     }
+
+    // Cancellation propagated from a parent can reach `never()` before its continuation is
+    // stored. The race is narrow, so this cancels enough times to hit it reliably.
+    @Test func `Task.never() throws when cancelled while suspending`() async {
+      await withTaskGroup(of: Void.self) { workers in
+        for _ in 0..<8 {
+          workers.addTask {
+            for _ in 0..<50_000 {
+              let parent = Task {
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                  group.addTask { try await Task.never() }
+                  group.addTask { _ = try await Task.never() as Int }
+                  try await group.next()
+                }
+              }
+              parent.cancel()
+              if case .success = await parent.result {
+                Issue.record("'Task.never()' returned instead of throwing")
+              }
+            }
+          }
+        }
+      }
+    }
   }
 #endif
