@@ -1,4 +1,14 @@
-import Foundation
+#if canImport(Darwin) || os(WASI)
+  import Foundation
+#elseif canImport(Glibc)
+  import Glibc
+#elseif canImport(Musl)
+  import Musl
+#elseif canImport(Android)
+  import Android
+#elseif os(Windows)
+  import WinSDK
+#endif
 
 extension Task where Success == Never, Failure == Never {
   /// Suspends the current task a number of times before resuming with the goal of allowing other
@@ -21,7 +31,7 @@ extension Task where Success == Never, Failure == Never {
 public let _defaultMegaYieldCount = max(
   0,
   min(
-    ProcessInfo.processInfo.environment["TASK_MEGA_YIELD_COUNT"].flatMap(Int.init) ?? 20,
+    _environmentValue("TASK_MEGA_YIELD_COUNT").flatMap(Int.init) ?? 20,
     10_000
   )
 )
@@ -98,4 +108,21 @@ extension Task where Failure == any Error {
       }
     }
   }
+}
+
+private func _environmentValue(_ name: String) -> String? {
+  #if canImport(Darwin) || os(WASI)
+    return ProcessInfo.processInfo.environment[name]
+  #elseif os(Windows)
+    return name.withCString(encodedAs: UTF16.self) { name in
+      let count = GetEnvironmentVariableW(name, nil, 0)
+      guard count > 0 else { return nil }
+      var buffer = [WCHAR](repeating: 0, count: Int(count))
+      let length = GetEnvironmentVariableW(name, &buffer, count)
+      guard length > 0, length < count else { return nil }
+      return String(decoding: buffer[..<Int(length)], as: UTF16.self)
+    }
+  #else
+    return getenv(name).map { String(cString: $0) }
+  #endif
 }

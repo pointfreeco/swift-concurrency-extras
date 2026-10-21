@@ -1,4 +1,6 @@
-public import Foundation
+#if canImport(Darwin) || os(WASI)
+  public import Foundation
+#endif
 
 /// A generic wrapper for isolating a mutable value with a lock.
 ///
@@ -7,7 +9,7 @@ public import Foundation
 @dynamicMemberLookup
 public final class LockIsolated<Value>: @unchecked Sendable {
   private var _value: Value
-  private let lock = NSRecursiveLock()
+  private let lock = RecursiveLock()
 
   /// Initializes lock-isolated state around a value.
   ///
@@ -109,11 +111,13 @@ extension LockIsolated where Value: Sendable {
   }
 #endif
 
-extension NSRecursiveLock {
-  @inlinable @discardableResult
-  @_spi(Internals) public func sync<R>(work: () throws -> R) rethrows -> R {
-    self.lock()
-    defer { self.unlock() }
-    return try work()
+#if canImport(Darwin) || os(WASI)
+  extension NSRecursiveLock {
+    @inlinable @discardableResult
+    @_spi(Internals) public func sync<R>(work: () throws -> R) rethrows -> R {
+      self.lock()
+      defer { self.unlock() }
+      return try work()
+    }
   }
-}
+#endif
