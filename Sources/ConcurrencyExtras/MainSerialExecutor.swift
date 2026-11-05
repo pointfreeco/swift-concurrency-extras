@@ -1,5 +1,11 @@
 #if !os(WASI) && !os(Windows) && !os(Android)
-  import Foundation
+  #if canImport(Darwin)
+    import Foundation
+  #elseif canImport(Glibc)
+    import Glibc
+  #elseif canImport(Musl)
+    import Musl
+  #endif
 
   #if compiler(>=6)
     /// Perform an operation on the main serial executor.

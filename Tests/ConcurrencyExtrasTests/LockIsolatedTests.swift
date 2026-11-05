@@ -75,5 +75,14 @@
       lockIsolated.setValue(2)
       XCTAssertEqual(lockIsolated.value, 2)
     }
+
+    func testReentrantAccess() {
+      let lockIsolated = LockIsolated(1)
+      // 'setValue' evaluates its argument while holding the lock.
+      lockIsolated.setValue(lockIsolated.value + 1)
+      XCTAssertEqual(lockIsolated.value, 2)
+      let value = lockIsolated.withValue { _ in lockIsolated.value }
+      XCTAssertEqual(value, 2)
+    }
   }
 #endif
